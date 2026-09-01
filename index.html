@@ -48,10 +48,14 @@ font-weight: 900;
 color: var(--white);
 }
 header p { color: var(--subtext); margin-top: 6px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
-.glyph-star { color: var(--accent); font-size: 0.5em; vertical-align: middle; margin-right: 10px; opacity: 0.85; }
+.glyph-svg { display: inline-block; vertical-align: -0.16em; fill: currentColor; flex-shrink: 0; }
+.glyph-svg.gold { color: var(--accent); }
+.glyph-svg.moon-tone { color: var(--accent2); }
+.glyph-svg.glow { filter: drop-shadow(0 0 4px rgba(200,168,108,0.55)); }
+.glyph-star { margin-right: 9px; opacity: 0.9; }
 .divider { display: flex; align-items: center; gap: 9px; width: 150px; margin: 14px auto; }
 .divider-line { flex: 1; height: 1px; background: var(--border); }
-.divider-star { color: var(--accent); font-size: 11px; line-height: 1; opacity: 0.9; }
+.divider-star { display: inline-flex; align-items: center; opacity: 0.9; }
 
 /* ── STICKY DASHBOARD ── */
 #dashboard {
@@ -130,7 +134,7 @@ line-height: 1;
 .progress-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--green), var(--accent2)); transition: width 0.4s ease; }
 .progress-wrap.complete .progress-bar-fill { background: linear-gradient(90deg, var(--accent), var(--green)); box-shadow: 0 0 10px rgba(200,168,108,0.55); }
 .progress-lbl { font-size: 10px; color: var(--subtext); margin-top: 4px; text-align: center; }
-.progress-lbl .glyph-star { font-size: 1em; margin-left: 3px; margin-right: 0; }
+.progress-lbl .glyph-svg { margin-left: 4px; }
 .dash-avg-wrap {
 width: 100%;
 display: flex;
@@ -161,7 +165,7 @@ background: rgba(107,165,133,0.14);
 color: var(--green);
 border: 1px solid rgba(107,165,133,0.35);
 }
-.year-status .glyph-star { font-size: 1em; margin-right: 2px; opacity: 0.9; }
+.year-status .glyph-svg { margin-right: 3px; }
 .year-ratio {
 font-size: 10.5px;
 color: var(--accent2);
@@ -232,7 +236,7 @@ max-width: 150px;
 .badge-enrolled-noconditions { background: rgba(181,106,92,0.14); color: var(--red); border: 1px solid rgba(181,106,92,0.3); }
 .badge-enrolled-condition { background: rgba(143,143,176,0.16); color: var(--purple); border: 1px solid rgba(143,143,176,0.35); }
 .badge-passed { background: rgba(107,165,133,0.14); color: var(--green); border: 1px solid rgba(107,165,133,0.3); font-weight: 500; }
-.badge-passed .glyph-star { font-size: 9px; margin-right: 1px; opacity: 0.9; }
+.badge-passed .glyph-svg { margin-right: 2px; }
 .sem-divider td { border-top: 3px solid var(--accent) !important; }
 .dot { font-size: 7px; }
 
@@ -443,7 +447,7 @@ letter-spacing: 0.04em;
 margin-bottom: 12px;
 display: flex; align-items: center; gap: 12px;
 }
-.stats-title .glyph-moon { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--accent2); opacity: 0.85; font-weight: 400; }
+.stats-title .glyph-moon { display: inline-flex; align-items: center; opacity: 0.9; margin-right: 2px; }
 .stats-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .stats-grid {
 display: grid;
@@ -522,6 +526,7 @@ transition: background 0.15s, color 0.15s;
 .menu-item:focus-visible { outline: 2px solid var(--accent2); outline-offset: -2px; }
 .menu-divider { height: 1px; background: var(--border); margin: 4px 2px; }
 .menu-hint { font-size: 9px; color: var(--muted); padding: 2px 10px 6px; line-height: 1.5; }
+#backup-menu-panel[hidden], #share-link-box[hidden] { display: none; }
 #share-link-box { display: flex; gap: 6px; padding: 4px 6px 8px; }
 #share-link-input {
 flex: 1;
@@ -574,14 +579,25 @@ background: rgba(123,150,163,0.08);
 border-bottom: 1px solid var(--border);
 padding: 9px 12px;
 }
-#view-only-banner .glyph-star { color: var(--accent); font-size: 1em; margin: 0 0 0 5px; }
+#view-only-banner .glyph-svg { margin-left: 5px; }
 .view-only-note { font-size: 10px; color: var(--subtext); }
 </style>
 
 </head>
 <body>
 
-<div id="view-only-banner" hidden>Преглед дељеног напретка <span class="glyph-star">✦</span></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ico-sparkle" viewBox="0 0 24 24">
+      <path d="M12 1c.9 4.8 2.2 7.9 4.3 10 2.1 2.1 5.2 3.4 10 4.3-4.8.9-7.9 2.2-10 4.3-2.1 2.1-3.4 5.2-4.3 10-.9-4.8-2.2-7.9-4.3-10-2.1-2.1-5.2-3.4-10-4.3 4.8-.9 7.9-2.2 10-4.3 2.1-2.1 3.4-5.2 4.3-10Z"/>
+    </symbol>
+    <symbol id="ico-crescent" viewBox="0 0 24 24">
+      <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="view-only-banner" hidden>Преглед дељеног напретка <svg class="glyph-svg gold" width="12" height="12"><use href="#ico-sparkle"></use></svg></div>
 
 <div id="backup-menu-wrap">
   <button type="button" id="backup-menu-btn" aria-haspopup="true" aria-expanded="false" title="Резервна копија и дељење">⋯</button>
@@ -596,9 +612,9 @@ padding: 9px 12px;
 </div>
 
 <header>
-  <h1><span class="glyph-star">✦</span>Политиколошке студије</h1>
+  <h1><span class="glyph-star"><svg class="glyph-svg gold glow" width="18" height="18"><use href="#ico-sparkle"></use></svg></span>Политиколошке студије</h1>
   <p style="margin-top:6px;font-size:14px;letter-spacing:0.04em;">Драгана Плазинић</p>
-  <div class="divider"><span class="divider-line"></span><span class="divider-star">✦</span><span class="divider-line"></span></div>
+  <div class="divider"><span class="divider-line"></span><span class="divider-star"><svg class="glyph-svg gold" width="10" height="10"><use href="#ico-sparkle"></use></svg></span><span class="divider-line"></span></div>
   <p>Факултет политичких наука · Акредитација 2022</p>
 </header>
 
@@ -990,7 +1006,7 @@ padding: 9px 12px;
 
 <!-- ══ СТАТИСТИКА ══ -->
 <div class="stats-section">
-  <div class="stats-title"><span class="glyph-moon">☾</span>Статистика</div>
+  <div class="stats-title"><span class="glyph-moon"><svg class="glyph-svg moon-tone" width="13" height="13"><use href="#ico-crescent"></use></svg></span>Статистика</div>
   <div class="stats-grid">
     <div class="stat-card best">
       <div class="stat-lbl">Најуспешнија година</div>
@@ -1084,7 +1100,7 @@ function ensureState(id) {
 // DERIVED STATUS: statuse se uvek racuna iz enrolled/uslov/passed, nikad ne cuva kao posebna vrednost
 function computeStatus(s) {
   if (s.passed) {
-    return { text: '<span class="glyph-star">✦</span>ПОЛОЖЕНО', cls: 'badge-passed', withDot: false };
+    return { text: '<span class="glyph-star"><svg class="glyph-svg gold" width="9" height="9"><use href="#ico-sparkle"></use></svg></span>ПОЛОЖЕНО', cls: 'badge-passed', withDot: false };
   }
   if (s.enrolled && !s.uslov) {
     return { text: 'УПИСАНО / БЕЗ УСЛОВА', cls: 'badge-enrolled-noconditions', withDot: false };
@@ -1126,7 +1142,7 @@ function updateYearStatuses() {
     badge.innerHTML = '';
     badge.className = 'year-status';
     if (allPassed) {
-      badge.innerHTML = '<span class="glyph-star">✦</span> Очишћена година';
+      badge.innerHTML = '<span class="glyph-star"><svg class="glyph-svg gold" width="11" height="11"><use href="#ico-sparkle"></use></svg></span> Очишћена година';
       badge.classList.add('očišćena');
     } else if (allEnrolledOrPassed) {
       badge.textContent = 'Одслушана година';
@@ -1255,7 +1271,7 @@ function recalc() {
   document.getElementById('prog-bar').style.width = pct + '%';
   if (passed >= 240) {
     progWrap.classList.add('complete');
-    progLbl.innerHTML = passed + ' / 240 ЕСПБ · ' + pct + '% <span class="glyph-star">✦</span>';
+    progLbl.innerHTML = passed + ' / 240 ЕСПБ · ' + pct + '% <span class="glyph-star"><svg class="glyph-svg gold glow" width="12" height="12"><use href="#ico-sparkle"></use></svg></span>';
   } else {
     progWrap.classList.remove('complete');
     progLbl.textContent = passed + ' / 240 ЕСПБ · ' + pct + '%';
@@ -1448,7 +1464,7 @@ function spawnStarPop(row) {
   if (!cell) return;
   const star = document.createElement('span');
   star.className = 'star-pop';
-  star.textContent = '✦';
+  star.innerHTML = '<svg class="glyph-svg gold" width="13" height="13"><use href="#ico-sparkle"></use></svg>';
   cell.appendChild(star);
   setTimeout(() => star.remove(), 900);
 }
