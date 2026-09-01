@@ -718,12 +718,17 @@ transition: border-color 0.2s;
 <div id="backup-menu-wrap">
   <button type="button" id="backup-menu-btn" aria-haspopup="true" aria-expanded="false" title="Резервна копија и дељење">⋯</button>
   <div id="backup-menu-panel" hidden>
+    <button type="button" class="menu-item" id="btn-export">Извези резервну копију (.json)</button>
+    <button type="button" class="menu-item" id="btn-import">Увези резервну копију</button>
+    <input type="file" id="import-file-input" accept="application/json" hidden>
+    <div class="menu-divider"></div>
     <button type="button" class="menu-item" id="btn-share">Подели мој напредак</button>
     <div id="share-link-box" hidden>
       <input type="text" id="share-link-input" readonly aria-label="Линк за дељење">
       <button type="button" id="btn-copy-link">Копирај линк</button>
       <button type="button" id="btn-close-share" title="Сакриј линк">✕</button>
     </div>
+    <div class="menu-hint">Резервна копија те штити ако очистиш browser или promeniš uređaj.</div>
   </div>
 </div>
 
@@ -1170,17 +1175,17 @@ const STORAGE_KEY = 'subject-state';
 const YEAR_LABELS = { 1: 'Прва година', 2: 'Друга година', 3: 'Трећа година', 4: 'Четврта година' };
 
 /*
-  Нови модел стања по предмету (независне boolean вредности,
-  без mutually-exclusive "state" стринга):
+  Model stanja po predmetu — cuva se u localStorage (radi u svakom
+  browseru, i offline, i kad se stranica hostuje preko GitHub Pages).
 
   state[id] = {
-    enrolled: bool,   // да ли је предмет уписан
-    uslov: bool,      // да ли је остварен услов (независно од enrolled!)
-    passed: bool,     // да ли је положен (приоритет над свим осталим)
+    enrolled: bool,
+    uslov: bool,
+    passed: bool,
     rok: string|null,
     grade: number|null,
-    academicYear: string|null,  // академска година у којој је ИСПИТ ПОЛОЖЕН (не година у програму!)
-    chosenName: string|undefined  // за изборне предмете
+    academicYear: string|null,
+    chosenName: string|undefined
   }
 */
 let state = {};
@@ -1188,22 +1193,25 @@ let VIEW_ONLY = false;
 
 async function loadState() {
   try {
-    const result = await window.storage.get(STORAGE_KEY, false);
-    if (result && result.value) {
-      state = JSON.parse(result.value);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      state = JSON.parse(raw);
     }
   } catch (e) {
-    // кључ још не постоји (чист почетак) или читање није успело — почни празно
+    // localStorage nedostupan (npr. privatni mod bez podrske) ili
+    // sacuvani podaci ostecceni — pocni prazno umesto da pukne app
+    console.error('Грешка при учитавању стања:', e);
     state = {};
   }
 }
 
 async function saveState() {
   try {
-    const result = await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
-    if (!result) console.error('Чување није успело.');
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
   } catch (e) {
     console.error('Грешка при чувању стања:', e);
+    return null;
   }
 }
 
@@ -1935,10 +1943,12 @@ function initActions() {
 /* ══════════════════════════════════════════════════════════════
    BACKUP (export/import) + SHARE (read-only snapshot link)
    Ova tri sistema su namerno odvojena:
-   1) window.storage  — glavni editable tracker (automatsko čuvanje)
+   1) localStorage — glavni editable tracker (automatsko čuvanje,
+      per-browser/per-uređaj)
    2) export/import .json — bezbednosna kopija tog istog state-a
+      (koristi se za prenos između uređaja/browsera ili kao backup)
    3) share link (#share=...) — READ-ONLY snapshot za drugu osobu,
-      nikad se ne piše u window.storage
+      nikad se ne piše u localStorage
    ══════════════════════════════════════════════════════════════ */
 
 // UTF-8 bezbedan base64 (da Ćirilica u nazivima izbornih predmeta ne puca kodiranje)
@@ -2084,7 +2094,7 @@ function fullRerenderFromState() {
   recalc();
 }
 
-// ── SHARE LINK (read-only snapshot, ne dira window.storage) ──
+// ── SHARE LINK (read-only snapshot, ne dira localStorage) ──
 function buildShareLink() {
   const compact = compactStateForShare(state);
   const encoded = utf8ToB64(JSON.stringify(compact));
@@ -2231,7 +2241,7 @@ async function init() {
 
   const shared = tryParseShareHash();
   if (shared) {
-    // READ-ONLY snapshot rezim — nikad se ne pise u window.storage,
+    // READ-ONLY snapshot rezim — nikad se ne pise u localStorage,
     // ne poziva se loadState()/saveState() nad ovim podacima.
     VIEW_ONLY = true;
     state = shared;
