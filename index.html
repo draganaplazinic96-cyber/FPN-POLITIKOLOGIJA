@@ -645,6 +645,7 @@ align-self: flex-end;
 <script>
 const ROKS = ['Новембар','Јануар','Фебруар','Март','Април','Јун','Јул','Август','Септембар'];
 const OCENE = [6,7,8,9,10];
+const ACADEMIC_YEARS = ['2015/16','2016/17','2017/18','2018/19','2019/20','2020/21','2021/22','2022/23','2023/24','2024/25','2025/26','2026/27','2027/28','2028/29','2029/30'];
 const BASE_PASSED = 0;
 const STORAGE_KEY = 'subject-state';
 
@@ -658,6 +659,7 @@ const STORAGE_KEY = 'subject-state';
     passed: bool,     // да ли је положен (приоритет над свим осталим)
     rok: string|null,
     grade: number|null,
+    academicYear: string|null,  // академска година у којој је ИСПИТ ПОЛОЖЕН (не година у програму!)
     chosenName: string|undefined  // за изборне предмете
   }
 */
@@ -685,6 +687,7 @@ async function saveState() {
 }
 
 // Увек враћа потпун, нормализован објекат стања (никад undefined поља)
+// academicYear је backward-compatible: старе ставке без овог поља враћају null
 function getRowState(id) {
   const s = state[id];
   return {
@@ -693,13 +696,18 @@ function getRowState(id) {
     passed: s ? !!s.passed : false,
     rok: s ? (s.rok || null) : null,
     grade: s ? (s.grade || null) : null,
+    academicYear: s ? (s.academicYear || null) : null,
     chosenName: s ? s.chosenName : undefined
   };
 }
 
 function ensureState(id) {
   if (!state[id]) {
-    state[id] = { enrolled: false, uslov: false, passed: false, rok: null, grade: null };
+    state[id] = { enrolled: false, uslov: false, passed: false, rok: null, grade: null, academicYear: null };
+  }
+  if (state[id].academicYear === undefined) {
+    // backward-compat: старе ставке без academicYear поља
+    state[id].academicYear = null;
   }
   return state[id];
 }
@@ -810,8 +818,9 @@ function buildActions(actionsDiv) {
   if (s.passed) {
     const rok = s.rok || '—';
     const grade = s.grade || null;
+    const academicYear = s.academicYear || '—';
     actionsDiv.innerHTML = `
-      <div style="font-size:10px;color:var(--amber);">📅 ${rok}${grade ? ' · оцена ' + grade : ''}</div>
+      <div style="font-size:10px;color:var(--amber);">📅 ${rok} · ${academicYear}${grade ? ' · оцена ' + grade : ''}</div>
       <div class="btn-undo" onclick="undoPass('${id}')">↩ поништи положено</div>
     `;
     return;
@@ -852,6 +861,10 @@ function buildActions(actionsDiv) {
       <select class="rok-select" id="rok-${id}">
         <option value="">— рок (обавезно) —</option>
         ${ROKS.map(r => `<option value="${r}">${r}</option>`).join('')}
+      </select>
+      <select class="rok-select" id="ay-${id}">
+        <option value="">— академска година (обавезно) —</option>
+        ${ACADEMIC_YEARS.map(y => `<option value="${y}">${y}</option>`).join('')}
       </select>
       <div class="check-row">
         <input type="checkbox" id="chk-${id}" onchange="togglePassed('${id}', this.checked)">
@@ -967,8 +980,10 @@ async function togglePassed(id, checked) {
   if (checked) {
     const rokSel = document.getElementById('rok-' + id);
     const ocenaSel = document.getElementById('ocena-' + id);
+    const aySel = document.getElementById('ay-' + id);
     const rok = rokSel ? rokSel.value : '';
     const grade = ocenaSel ? parseInt(ocenaSel.value) : NaN;
+    const academicYear = aySel ? aySel.value : '';
 
     if (!rok) {
       alert('Прво изабери рок пре него што означиш да је предмет положен.');
@@ -984,12 +999,20 @@ async function togglePassed(id, checked) {
       return;
     }
 
+    if (!academicYear) {
+      alert('Прво изабери академску годину пре него што означиш да је предмет положен.');
+      const chk = document.getElementById('chk-' + id);
+      if (chk) chk.checked = false;
+      return;
+    }
+
     const subjectName = row ? row.querySelector('.subject-name').textContent.trim() : 'Предмет';
 
     // passed=true има приоритет над свим осталим — enrolled/uslov ostaju zapamceni ispod
     s.passed = true;
     s.rok = rok;
     s.grade = grade;
+    s.academicYear = academicYear;
     await saveState();
     recalc();
     updateRowVisual(id);
@@ -1009,6 +1032,7 @@ async function undoPass(id) {
   s.passed = false;
   s.rok = null;
   s.grade = null;
+  s.academicYear = null;
   // enrolled i uslov ostaju kakvi su bili — nezavisne informacije se ne brisu
   await saveState();
   recalc();
