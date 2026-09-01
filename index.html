@@ -109,7 +109,7 @@ header p { color: var(--subtext); margin-top: 6px; font-size: 11px; letter-spaci
 }
 
 /* ── YEAR BLOCK ── */
-.year-block { margin-bottom: 36px; }
+.year-block { margin-bottom: 20px; }
 .year-title {
   font-family: 'Playfair Display', serif;
   font-size: 17px; font-weight: 700;
@@ -160,6 +160,7 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 .badge-ok  { background: rgba(90,158,122,0.15);  color: var(--green);  border: 1px solid rgba(90,158,122,0.3); }
 .badge-fail{ background: rgba(192,96,96,0.15);   color: var(--red);    border: 1px solid rgba(192,96,96,0.3); }
 .badge-na  { background: rgba(74,74,96,0.2);     color: var(--muted);  border: 1px solid rgba(74,74,96,0.4); }
+.sem-divider td { border-top: 3px solid var(--accent) !important; }
 .dot { font-size: 7px; }
 
 /* ── ACTIONS CELL ── */
@@ -245,33 +246,6 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   align-self: flex-end;
 }
 
-/* rok section at bottom */
-.rok-section {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px 20px;
-  margin-bottom: 28px;
-}
-.rok-section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px; font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 12px;
-  display: flex; align-items: center; gap: 10px;
-}
-.rok-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-.rok-badges { display: flex; flex-wrap: wrap; gap: 8px; }
-.rok-badge {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px 16px;
-  text-align: center;
-}
-.rok-badge .r-name { color: var(--amber); font-size: 12px; font-weight: 500; }
-.rok-badge .r-sub { color: var(--subtext); font-size: 9px; margin-top: 2px; }
-
 /* footnote */
 .footnote { font-size: 10px; color: var(--muted); line-height: 1.8; }
 </style>
@@ -323,75 +297,84 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 <div class="year-block" data-year="1" style="margin-top:24px;">
   <div class="year-title">Прва година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 1–2</span> <span class="year-status" id="ystatus-1"></span></div>
   <table>
-    <thead><tr><th>Предмет</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
+    <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
-      <!-- положени -->
-      <tr data-id="uvod-pt" data-espb="6" data-state="not-enrolled" data-year="1">
-        <td><div class="subject-name">Увод у политичку теорију</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+      <tr data-id="akad-vest" data-espb="4" data-state="not-enrolled">
+        <td><div class="subject-name">Академске вештине</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">1</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="uvod-pt"></div></td>
+        <td><div class="actions" data-id="akad-vest"></div></td>
       </tr>
-      <tr data-id="ant-sr" data-espb="6" data-state="not-enrolled">
+      <tr data-id="ist-antic" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Историја античке и средњовековне политичке мисли</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">1</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="ant-sr"></div></td>
+        <td><div class="actions" data-id="ist-antic"></div></td>
       </tr>
       <tr data-id="pol-ek" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка економија</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">1</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-ek"></div></td>
       </tr>
       <tr data-id="soc" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Социологија</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">1</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="soc"></div></td>
       </tr>
-      <!-- неположен, уписан -->
       <tr data-id="sav-pol-ist" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Савремена политичка историја</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">1</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="sav-pol-ist"></div></td>
       </tr>
-      <tr data-id="eng1" data-espb="4" data-state="not-enrolled">
-        <td><div class="subject-name">Енглески језик I (Б2/а)</div><div class="subject-sub">изборни – страни језик</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
+      <tr data-id="uvod-pt" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name">Увод у политичку теорију</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">1</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="eng1"></div></td>
+        <td><div class="actions" data-id="uvod-pt"></div></td>
       </tr>
-      <tr data-id="mod-pol" data-espb="6" data-state="not-enrolled">
+      <tr class="sem-divider" data-id="ist-moderne" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Историја модерне политичке мисли</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">2</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="mod-pol"></div></td>
-      </tr>
-      <tr data-id="sav-pol-ek" data-espb="6" data-state="not-enrolled">
-        <td><div class="subject-name">Савремена политичка економија</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="sav-pol-ek"></div></td>
-      </tr>
-      <tr data-id="akad-vest" data-espb="4" data-state="not-enrolled">
-        <td><div class="subject-name">Академске вештине</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="akad-vest"></div></td>
+        <td><div class="actions" data-id="ist-moderne"></div></td>
       </tr>
       <tr data-id="osnovi-prava" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Основи права</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">2</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="osnovi-prava"></div></td>
       </tr>
+      <tr data-id="sav-pol-ek" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name">Савремена политичка економија</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">2</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="sav-pol-ek"></div></td>
+      </tr>
       <tr data-id="fil" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Филозофија</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">2</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="fil"></div></td>
+      </tr>
+      <tr data-id="strani-jezik-1" data-espb="4" data-state="not-enrolled">
+        <td><div class="subject-name">Енглески језик 1 (Б2/а)</div><div class="subject-sub">страни језик — двосеместрални, полаже се на крају</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">1–2</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="strani-jezik-1"></div></td>
       </tr>
     </tbody>
   </table>
@@ -401,73 +384,84 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 <div class="year-block" data-year="2">
   <div class="year-title">Друга година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 3–4</span> <span class="year-status" id="ystatus-2"></span></div>
   <table>
-    <thead><tr><th>Предмет</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
+    <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
-      <tr data-id="upor-pol" data-espb="6" data-state="not-enrolled">
-        <td><div class="subject-name">Упоредна политика</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="upor-pol"></div></td>
-      </tr>
-      <tr data-id="pol-sis-srb" data-espb="6" data-state="not-enrolled">
-        <td><div class="subject-name">Политички систем Србије</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="pol-sis-srb"></div></td>
-      </tr>
       <tr data-id="ek-sis-srb" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Економски систем Србије</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">3</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="ek-sis-srb"></div></td>
       </tr>
+      <tr data-id="pol-sis-srb" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name">Политички систем Србије</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">3</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="pol-sis-srb"></div></td>
+      </tr>
       <tr data-id="sav-drz" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Савремена држава</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">3</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="sav-drz"></div></td>
       </tr>
-      <tr data-id="ist-balk" data-espb="4" data-state="not-enrolled">
-        <td><div class="subject-name">Изборни предмет 1 – Историја балканских односа</div></td>
+      <tr data-id="upor-pol" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name">Упоредна политика</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">3</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="upor-pol"></div></td>
+      </tr>
+      <tr data-id="izb-blok1" data-espb="4" data-state="not-enrolled">
+        <td><div class="subject-name">Историја балканских односа</div><div class="subject-sub">Изборни блок 1</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">3</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="ist-balk"></div></td>
+        <td><div class="actions" data-id="izb-blok1"></div></td>
       </tr>
-      <tr data-id="eng2" data-espb="4" data-state="not-enrolled">
-        <td><div class="subject-name">Енглески језик II (Б2/б)</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="eng2"></div></td>
-      </tr>
-      <tr data-id="ist-srp-pol" data-espb="4" data-state="not-enrolled">
-        <td><div class="subject-name">Историја српске политичке мисли</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="ist-srp-pol"></div></td>
-      </tr>
-      <tr data-id="pol-soc" data-espb="6" data-state="not-enrolled">
+      <tr class="sem-divider" data-id="pol-soc" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка социологија</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">4</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-soc"></div></td>
       </tr>
-      <tr data-id="sav-pol-teor" data-espb="6" data-state="not-enrolled">
-        <td><div class="subject-name">Савремена политичка теорија</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="sav-pol-teor"></div></td>
-      </tr>
       <tr data-id="pol-sis-eu" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политички систем Европске уније</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">4</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-sis-eu"></div></td>
       </tr>
-      <tr data-id="nauka-org" data-espb="5" data-state="not-enrolled">
-        <td><div class="subject-name">Изборни предмет 2 – Наука о организацији и управљању</div></td>
+      <tr data-id="ist-srp-pol" data-espb="4" data-state="not-enrolled">
+        <td><div class="subject-name">Историја српске политичке мисли</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">4</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="ist-srp-pol"></div></td>
+      </tr>
+      <tr data-id="sav-pol-teor" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name">Савремена политичка теорија</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">4</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="sav-pol-teor"></div></td>
+      </tr>
+      <tr data-id="izb-blok2" data-espb="5" data-state="not-enrolled">
+        <td><div class="subject-name">Наука о организацији и управљању</div><div class="subject-sub">Изборни блок 2</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">4</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">5</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="nauka-org"></div></td>
+        <td><div class="actions" data-id="izb-blok2"></div></td>
+      </tr>
+      <tr data-id="strani-jezik-2" data-espb="4" data-state="not-enrolled">
+        <td><div class="subject-name">Енглески језик 2 (Б2/б)</div><div class="subject-sub">страни језик — двосеместрални, полаже се на крају</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">3–4</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="strani-jezik-2"></div></td>
       </tr>
     </tbody>
   </table>
@@ -477,74 +471,77 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 <div class="year-block" data-year="3">
   <div class="year-title">Трећа година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 5–6</span> <span class="year-status" id="ystatus-3"></span></div>
   <table>
-    <thead><tr><th>Предмет</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
+    <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
-      <tr data-id="medjunarodn" data-espb="6" data-state="not-enrolled">
+      <tr data-id="medjunarodni" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Међународни односи</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">5</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="medjunarodn"></div></td>
+        <td><div class="actions" data-id="medjunarodni"></div></td>
+      </tr>
+      <tr data-id="antropologija" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name">Политичка антропологија и студије етницитета</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">5</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="antropologija"></div></td>
       </tr>
       <tr data-id="pol-soc-sav" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка социологија савременог друштва</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">5</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-soc-sav"></div></td>
       </tr>
-      <tr data-id="pol-antr" data-espb="6" data-state="not-enrolled">
-        <td><div class="subject-name">Политичка антропологија и студије етницитета</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="pol-antr"></div></td>
-      </tr>
-      <!-- izborni 3 - not enrolled -->
-      <tr data-id="izb3" data-espb="6" data-state="not-enrolled" data-elective-group="blok3">
-        <td>
-          <div class="subject-name" id="izb3-name">Изборни предмет 3</div>
-          <div class="subject-sub">Изборни блок 3 (могући: Политичко комуницирање / Политичко понашање / Социјална онтологија / Теорија игара / Управљање тимовима, пројектима и ИТ)</div>
-        </td>
+      <tr data-id="izb-blok3a" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name" id="izb-blok3a-name">Изборни предмет 1</div><div class="subject-sub">Изборни блок 3</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">5</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="izb3" data-elective-group="blok3" data-elective-opts="Политичко комуницирање|Политичко понашање|Социјална онтологија|Теорија игара|Управљање тимовима, пројектима и ИТ"></div></td>
+        <td><div class="actions" data-id="izb-blok3a" data-elective-opts="Политичко комуницирање|Политичко понашање|Социјална онтологија|Теорија игара|Управљање тимовима, пројектима и ИТ"></div></td>
       </tr>
-      <tr data-id="izb4" data-espb="6" data-state="not-enrolled" data-elective-group="blok3">
-        <td>
-          <div class="subject-name" id="izb4-name">Изборни предмет 4</div>
-          <div class="subject-sub">Изборни блок 3 (могући: Политичко комуницирање / Политичко понашање / Социјална онтологија / Теорија игара / Управљање тимовима, пројектима и ИТ)</div>
-        </td>
+      <tr data-id="izb-blok3b" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name" id="izb-blok3b-name">Изборни предмет 2</div><div class="subject-sub">Изборни блок 3</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">5</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="izb4" data-elective-group="blok3" data-elective-opts="Политичко комуницирање|Политичко понашање|Социјална онтологија|Теорија игара|Управљање тимовима, пројектима и ИТ"></div></td>
+        <td><div class="actions" data-id="izb-blok3b" data-elective-opts="Политичко комуницирање|Политичко понашање|Социјална онтологија|Теорија игара|Управљање тимовима, пројектима и ИТ"></div></td>
       </tr>
-      <tr data-id="javna-uprava" data-espb="6" data-state="not-enrolled">
+      <tr class="sem-divider" data-id="javna-uprava" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Јавна управа</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">6</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="javna-uprava"></div></td>
       </tr>
       <tr data-id="lok-sam" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Локална самоуправа</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">6</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="lok-sam"></div></td>
       </tr>
-      <tr data-id="metod" data-espb="6" data-state="not-enrolled">
+      <tr data-id="metodologija" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Методологија политичких наука</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">6</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="metod"></div></td>
+        <td><div class="actions" data-id="metodologija"></div></td>
       </tr>
-      <tr data-id="pol-rel" data-espb="6" data-state="not-enrolled">
+      <tr data-id="pol-religije" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политикологија религије</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">6</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="pol-rel"></div></td>
+        <td><div class="actions" data-id="pol-religije"></div></td>
       </tr>
-      <tr data-id="autor" data-espb="6" data-state="not-enrolled">
-        <td><div class="subject-name">Изборни предмет 5 – Ауторитарни режими</div></td>
+      <tr data-id="izb-blok4" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name">Ауторитарни режими</div><div class="subject-sub">Изборни блок 4</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">6</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="autor"></div></td>
+        <td><div class="actions" data-id="izb-blok4"></div></td>
       </tr>
     </tbody>
   </table>
@@ -552,102 +549,89 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 
 <!-- ══ ЧЕТВРТА ГОДИНА ══ -->
 <div class="year-block" data-year="4">
-  <div class="year-title">Четврта година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 7–8 · није уписана</span> <span class="year-status" id="ystatus-4"></span></div>
+  <div class="year-title">Четврта година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 7–8</span> <span class="year-status" id="ystatus-4"></span></div>
   <table>
-    <thead><tr><th>Предмет</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
+    <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
       <tr data-id="jav-pol" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Јавне политике</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">7</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="jav-pol"></div></td>
       </tr>
       <tr data-id="pol-kult" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка култура и политички поредак</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">7</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-kult"></div></td>
       </tr>
       <tr data-id="partije" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Партије и партијски системи</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">7</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="partije"></div></td>
       </tr>
-      <tr data-id="izb6" data-espb="6" data-state="not-enrolled" data-elective-group="blok5">
-        <td>
-          <div class="subject-name" id="izb6-name">Изборни предмет 6</div>
-          <div class="subject-sub">Изборни блок 5 – бира се 1 (могући: Квалитативни методи / Квантитативни методи у политичким наукама)</div>
-        </td>
+      <tr data-id="strucna-praksa" data-espb="3" data-state="not-enrolled">
+        <td><div class="subject-name">Стручна пракса</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">7</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">3</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="strucna-praksa"></div></td>
+      </tr>
+      <tr data-id="izb-blok5" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name" id="izb-blok5-name">Изборни предмет</div><div class="subject-sub">Изборни блок 5</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">7</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="izb6" data-elective-opts="Квалитативни методи у политичким наукама|Квантитативни методи у политичким наукама"></div></td>
+        <td><div class="actions" data-id="izb-blok5" data-elective-opts="Квалитативни методи у политичким наукама|Квантитативни методи у политичким наукама"></div></td>
       </tr>
-      <tr data-id="izb7" data-espb="6" data-state="not-enrolled" data-elective-group="blok6">
-        <td>
-          <div class="subject-name" id="izb7-name">Изборни предмет 7</div>
-          <div class="subject-sub">Изборни блок 6 – бира се 1 (могући: Феноменологија насиља / Увод у спољну политику / Системи социјалне сигурности / Политичка економија Кине / Реторика / Институционална економија)</div>
-        </td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+      <tr data-id="izb-blok6" data-espb="5" data-state="not-enrolled">
+        <td><div class="subject-name" id="izb-blok6-name">Изборни предмет</div><div class="subject-sub">Изборни блок 6</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">7</td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">5</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="izb7" data-elective-opts="Феноменологија насиља|Увод у спољну политику и спољнополитичку анализу|Системи социјалне сигурности|Политичка економија Кине|Реторика|Институционална економија"></div></td>
+        <td><div class="actions" data-id="izb-blok6" data-elective-opts="Реторика (5 ЕСПБ)|Системи социјалне сигурности (5 ЕСПБ)|Анализа политичких процеса (6 ЕСПБ)|Институционална економија (6 ЕСПБ)|Политичка економија Кине (6 ЕСПБ)|Увод у спољну политику и спољнополитичку анализу (6 ЕСПБ)|Феноменологија насиља (6 ЕСПБ)"></div></td>
       </tr>
-      <tr data-id="verske" data-espb="4" data-state="not-enrolled">
+      <tr class="sem-divider" data-id="verske" data-espb="4" data-state="not-enrolled">
         <td><div class="subject-name">Верске заједнице у Србији</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">8</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="verske"></div></td>
       </tr>
       <tr data-id="izbori" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Избори и изборни системи</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">8</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="izbori"></div></td>
       </tr>
       <tr data-id="soc-ek" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Социјална и политичка екологија</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">8</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="soc-ek"></div></td>
       </tr>
-      <tr data-id="izb8" data-espb="6" data-state="not-enrolled" data-elective-group="blok7">
-        <td>
-          <div class="subject-name" id="izb8-name">Изборни предмет 8</div>
-          <div class="subject-sub">Изборни блок 7 – бирају се 2 (могући: Политичке установе и политички живот на Балкану / Компаративна јавна управа / Политички маркетинг / Култура и политика људских права / Заштита деце у миграцијама)</div>
-        </td>
+      <tr data-id="izb-blok7a" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name" id="izb-blok7a-name">Изборни предмет 1</div><div class="subject-sub">Изборни блок 7</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">8</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="izb8" data-elective-opts="Политичке установе и политички живот на Балкану|Компаративна јавна управа|Политички маркетинг|Култура и политика људских права|Заштита деце у миграцијама"></div></td>
+        <td><div class="actions" data-id="izb-blok7a" data-elective-opts="Заштита деце у миграцијама|Компаративна јавна управа|Култура и политика људских права|Политички маркетинг|Политичке установе и политички живот на Балкану"></div></td>
       </tr>
-      <tr data-id="izb9" data-espb="6" data-state="not-enrolled" data-elective-group="blok7">
-        <td>
-          <div class="subject-name" id="izb9-name">Изборни предмет 9</div>
-          <div class="subject-sub">Изборни блок 7 – бирају се 2 (могући: Политичке установе и политички живот на Балкану / Компаративна јавна управа / Политички маркетинг / Култура и политика људских права / Заштита деце у миграцијама)</div>
-        </td>
+      <tr data-id="izb-blok7b" data-espb="6" data-state="not-enrolled">
+        <td><div class="subject-name" id="izb-blok7b-name">Изборни предмет 2</div><div class="subject-sub">Изборни блок 7</div></td>
+        <td class="espb-col" style="color:var(--accent2);font-size:10.5px;">8</td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
-        <td><div class="actions" data-id="izb9" data-elective-opts="Политичке установе и политички живот на Балкану|Компаративна јавна управа|Политички маркетинг|Култура и политика људских права|Заштита деце у миграцијама"></div></td>
+        <td><div class="actions" data-id="izb-blok7b" data-elective-opts="Заштита деце у миграцијама|Компаративна јавна управа|Култура и политика људских права|Политички маркетинг|Политичке установе и политички живот на Балкану"></div></td>
       </tr>
     </tbody>
   </table>
-</div>
-
-<!-- РОКОВИ -->
-<div class="year-block">
-  <div class="rok-section">
-    <div class="rok-section-title">Испитни рокови</div>
-    <div class="rok-badges">
-      <div class="rok-badge"><div class="r-name">Новембар</div><div class="r-sub">ванредни</div></div>
-      <div class="rok-badge"><div class="r-name">Јануар</div><div class="r-sub">редовни</div></div>
-      <div class="rok-badge"><div class="r-name">Фебруар</div><div class="r-sub">редовни</div></div>
-      <div class="rok-badge"><div class="r-name">Март</div><div class="r-sub">ванредни</div></div>
-      <div class="rok-badge"><div class="r-name">Април</div><div class="r-sub">ванредни</div></div>
-      <div class="rok-badge"><div class="r-name">Јун</div><div class="r-sub">редовни</div></div>
-      <div class="rok-badge"><div class="r-name">Јул</div><div class="r-sub">редовни</div></div>
-      <div class="rok-badge"><div class="r-name">Август</div><div class="r-sub">редовни</div></div>
-      <div class="rok-badge"><div class="r-name">Септембар</div><div class="r-sub">редовни</div></div>
-    </div>
-  </div>
 </div>
 
 
