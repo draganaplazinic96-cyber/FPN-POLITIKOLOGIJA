@@ -159,6 +159,7 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 }
 .badge-ok  { background: rgba(90,158,122,0.15);  color: var(--green);  border: 1px solid rgba(90,158,122,0.3); }
 .badge-fail{ background: rgba(192,96,96,0.15);   color: var(--red);    border: 1px solid rgba(192,96,96,0.3); }
+.badge-pending{ background: rgba(196,154,69,0.15); color: var(--amber); border: 1px solid rgba(196,154,69,0.3); }
 .badge-na  { background: rgba(74,74,96,0.2);     color: var(--muted);  border: 1px solid rgba(74,74,96,0.4); }
 .sem-divider td { border-top: 3px solid var(--accent) !important; }
 .dot { font-size: 7px; }
@@ -1016,7 +1017,7 @@ function updateRowVisual(id, newState, rok) {
   } else if (newState === 'enrolled') {
     row.classList.add('row-enrolled');
     const uslov = state[id] && state[id].uslov;
-    badgeCell.innerHTML = `<span class="badge badge-fail"><span class="dot">●</span> није положен</span>${uslov ? '<div style="margin-top:4px;font-size:9px;color:var(--green);">✓ услов остварен</div>' : ''}`;
+    badgeCell.innerHTML = `<span class="badge badge-pending"><span class="dot">●</span> уписан</span>${uslov ? '<div style="margin-top:4px;font-size:9px;color:var(--green);">✓ услов остварен</div>' : ''}`;
     if (ocenaCell) ocenaCell.textContent = '—';
   } else {
     badgeCell.innerHTML = `<span class="badge badge-na"><span class="dot">●</span> није уписан</span>`;
