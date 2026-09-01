@@ -155,6 +155,7 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   font-size: 10px; font-weight: 500;
   letter-spacing: 0.05em; text-transform: uppercase; white-space: normal;
   line-height: 1.4; text-align: center;
+  max-width: 130px;
 }
 .badge-ok  { background: rgba(90,158,122,0.15);  color: var(--green);  border: 1px solid rgba(90,158,122,0.3); }
 .badge-fail{ background: rgba(192,96,96,0.15);   color: var(--red);    border: 1px solid rgba(192,96,96,0.3); }
@@ -822,7 +823,7 @@ function buildActions(actionsDiv) {
         ${OCENE.map(o => `<option value="${o}">${o}</option>`).join('')}
       </select>
       <select class="rok-select" id="rok-${id}">
-        <option value="">— рок —</option>
+        <option value="">— рок (обавезно) —</option>
         ${ROKS.map(r => `<option value="${r}">${r}</option>`).join('')}
       </select>
       <div class="check-row">
@@ -939,6 +940,13 @@ async function togglePassed(id, checked) {
     const rok = rokSel ? rokSel.value : '';
     const grade = ocenaSel ? parseInt(ocenaSel.value) : NaN;
 
+    if (!rok) {
+      alert('Прво изабери рок пре него што означиш да је предмет положен.');
+      const chk = document.getElementById('chk-' + id);
+      if (chk) chk.checked = false;
+      return;
+    }
+
     if (!grade || isNaN(grade)) {
       alert('Прво изабери оцену пре него што означиш да је предмет положен.');
       const chk = document.getElementById('chk-' + id);
@@ -948,7 +956,7 @@ async function togglePassed(id, checked) {
 
     const subjectName = row ? row.querySelector('.subject-name').textContent.trim() : 'Предмет';
 
-    state[id] = { state: 'passed', rok: rok || null, grade: grade, espb: espb };
+    state[id] = { state: 'passed', rok: rok, grade: grade, espb: espb };
     updateRowVisual(id, 'passed', rok);
     showToast(subjectName, grade);
   } else {
@@ -1024,9 +1032,9 @@ function updateRowVisual(id, newState, rok) {
     row.classList.add('row-enrolled');
     const uslov = state[id] && state[id].uslov;
     if (uslov) {
-      badgeCell.innerHTML = `<span class="badge badge-enrolled-condition">уписано / неположено / остварен услов</span>`;
+      badgeCell.innerHTML = `<span class="badge badge-enrolled-condition">неположено · остварен услов</span>`;
     } else {
-      badgeCell.innerHTML = `<span class="badge badge-enrolled-noconditions">уписано / неположено / без услова</span>`;
+      badgeCell.innerHTML = `<span class="badge badge-enrolled-noconditions">неположено · без услова</span>`;
     }
     if (ocenaCell) ocenaCell.textContent = '—';
   } else {
