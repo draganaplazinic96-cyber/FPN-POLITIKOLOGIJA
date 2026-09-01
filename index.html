@@ -77,6 +77,7 @@ header p { color: var(--subtext); margin-top: 6px; font-size: 11px; letter-spaci
 .num-fail { color: var(--red); }
 .num-na { color: var(--muted); }
 .num-total { color: var(--accent); }
+.num-avg { color: var(--accent2); }
 .progress-wrap { flex: 1; min-width: 180px; max-width: 300px; }
 .progress-bar-bg { background: var(--card); border-radius: 20px; height: 8px; overflow: hidden; }
 .progress-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--green), var(--accent2)); transition: width 0.4s ease; }
@@ -172,7 +173,7 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 .check-row label { font-size: 10px; color: var(--subtext); cursor: pointer; user-select: none; }
 
 /* rok selector */
-.rok-select {
+.rok-select, .ocena-select {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   background: var(--surface);
@@ -182,9 +183,10 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   padding: 3px 7px;
   cursor: pointer;
   outline: none;
-  display: none;
+  display: block;
 }
-.rok-select:focus { border-color: var(--amber); }
+.ocena-select { color: var(--accent2); }
+.rok-select:focus, .ocena-select:focus { border-color: var(--amber); }
 
 /* enroll button */
 .btn-enroll {
@@ -199,6 +201,16 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   transition: background 0.15s;
 }
 .btn-enroll:hover { background: rgba(123,158,168,0.15); }
+
+.btn-unenroll, .btn-undo {
+  font-size: 9px;
+  color: var(--muted);
+  cursor: pointer;
+  margin-top: 2px;
+  text-align: right;
+  user-select: none;
+}
+.btn-unenroll:hover, .btn-undo:hover { color: var(--red); }
 
 /* elective chooser */
 .elective-chooser {
@@ -267,9 +279,10 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 <body>
 
 <header>
-  <h1>Политиколошке студије · Драгана Плазинић</h1>
+  <h1>Политиколошке студије</h1>
+  <p style="margin-top:6px;font-size:14px;letter-spacing:0.04em;">Драгана Плазинић</p>
   <div class="divider"></div>
-  <p>Факултет политичких наука · Акредитација 2022 · Интерактивни трекер</p>
+  <p>Факултет политичких наука · Акредитација 2022</p>
 </header>
 
 <!-- STICKY DASHBOARD -->
@@ -290,6 +303,10 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
     <div class="num num-total">240</div>
     <div class="lbl">Укупно за диплому</div>
   </div>
+  <div class="dash-card">
+    <div class="num num-avg" id="d-prosek">—</div>
+    <div class="lbl">Просечна оцена</div>
+  </div>
   <div class="progress-wrap">
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="prog-bar" style="width:42.08%"></div>
@@ -309,72 +326,72 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
     <thead><tr><th>Предмет</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
       <!-- положени -->
-      <tr class="row-passed" data-id="uvod-pt" data-espb="6" data-state="passed" data-ocena="9" data-year="1">
+      <tr data-id="uvod-pt" data-espb="6" data-state="not-enrolled" data-year="1">
         <td><div class="subject-name">Увод у политичку теорију</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">9</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="uvod-pt"></div></td>
       </tr>
-      <tr class="row-passed" data-id="ant-sr" data-espb="6" data-state="passed" data-ocena="7">
+      <tr data-id="ant-sr" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Историја античке и средњовековне политичке мисли</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">7</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="ant-sr"></div></td>
       </tr>
-      <tr class="row-passed" data-id="pol-ek" data-espb="6" data-state="passed" data-ocena="8">
+      <tr data-id="pol-ek" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка економија</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">8</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="pol-ek"></div></td>
       </tr>
-      <tr class="row-passed" data-id="soc" data-espb="6" data-state="passed" data-ocena="8">
+      <tr data-id="soc" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Социологија</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">8</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="soc"></div></td>
       </tr>
       <!-- неположен, уписан -->
-      <tr data-id="sav-pol-ist" data-espb="6" data-state="enrolled">
+      <tr data-id="sav-pol-ist" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Савремена политичка историја</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="sav-pol-ist"></div></td>
       </tr>
-      <tr class="row-passed" data-id="eng1" data-espb="4" data-state="passed" data-ocena="8">
+      <tr data-id="eng1" data-espb="4" data-state="not-enrolled">
         <td><div class="subject-name">Енглески језик I (Б2/а)</div><div class="subject-sub">изборни – страни језик</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">8</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="eng1"></div></td>
       </tr>
-      <tr class="row-passed" data-id="mod-pol" data-espb="6" data-state="passed" data-ocena="6">
+      <tr data-id="mod-pol" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Историја модерне политичке мисли</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">6</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="mod-pol"></div></td>
       </tr>
-      <tr class="row-passed" data-id="sav-pol-ek" data-espb="6" data-state="passed" data-ocena="9">
+      <tr data-id="sav-pol-ek" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Савремена политичка економија</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">9</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="sav-pol-ek"></div></td>
       </tr>
-      <tr class="row-passed" data-id="akad-vest" data-espb="4" data-state="passed" data-ocena="П">
+      <tr data-id="akad-vest" data-espb="4" data-state="not-enrolled">
         <td><div class="subject-name">Академске вештине</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">П</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="akad-vest"></div></td>
       </tr>
-      <tr class="row-passed" data-id="osnovi-prava" data-espb="6" data-state="passed" data-ocena="8">
+      <tr data-id="osnovi-prava" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Основи права</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">8</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="osnovi-prava"></div></td>
       </tr>
-      <tr class="row-passed" data-id="fil" data-espb="6" data-state="passed" data-ocena="8">
+      <tr data-id="fil" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Филозофија</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">8</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="fil"></div></td>
       </tr>
     </tbody>
   </table>
@@ -386,71 +403,71 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   <table>
     <thead><tr><th>Предмет</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
-      <tr class="row-passed" data-id="upor-pol" data-espb="6" data-state="passed" data-ocena="7">
+      <tr data-id="upor-pol" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Упоредна политика</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">7</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="upor-pol"></div></td>
       </tr>
-      <tr class="row-passed" data-id="pol-sis-srb" data-espb="6" data-state="passed" data-ocena="8">
+      <tr data-id="pol-sis-srb" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политички систем Србије</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">8</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="pol-sis-srb"></div></td>
       </tr>
-      <tr data-id="ek-sis-srb" data-espb="6" data-state="enrolled">
+      <tr data-id="ek-sis-srb" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Економски систем Србије</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="ek-sis-srb"></div></td>
       </tr>
-      <tr class="row-passed" data-id="sav-drz" data-espb="6" data-state="passed" data-ocena="7">
+      <tr data-id="sav-drz" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Савремена држава</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">7</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="sav-drz"></div></td>
       </tr>
-      <tr data-id="ist-balk" data-espb="4" data-state="enrolled">
+      <tr data-id="ist-balk" data-espb="4" data-state="not-enrolled">
         <td><div class="subject-name">Изборни предмет 1 – Историја балканских односа</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="ist-balk"></div></td>
       </tr>
-      <tr data-id="eng2" data-espb="4" data-state="enrolled">
+      <tr data-id="eng2" data-espb="4" data-state="not-enrolled">
         <td><div class="subject-name">Енглески језик II (Б2/б)</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">4</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="eng2"></div></td>
       </tr>
-      <tr class="row-passed" data-id="ist-srp-pol" data-espb="4" data-state="passed" data-ocena="10">
+      <tr data-id="ist-srp-pol" data-espb="4" data-state="not-enrolled">
         <td><div class="subject-name">Историја српске политичке мисли</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">10</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">4</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="ist-srp-pol"></div></td>
       </tr>
-      <tr class="row-passed" data-id="pol-soc" data-espb="6" data-state="passed" data-ocena="9">
+      <tr data-id="pol-soc" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка социологија</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">9</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="pol-soc"></div></td>
       </tr>
-      <tr data-id="sav-pol-teor" data-espb="6" data-state="enrolled">
+      <tr data-id="sav-pol-teor" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Савремена политичка теорија</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="sav-pol-teor"></div></td>
       </tr>
-      <tr data-id="pol-sis-eu" data-espb="6" data-state="enrolled">
+      <tr data-id="pol-sis-eu" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политички систем Европске уније</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-sis-eu"></div></td>
       </tr>
-      <tr class="row-passed" data-id="nauka-org" data-espb="5" data-state="passed" data-ocena="7">
+      <tr data-id="nauka-org" data-espb="5" data-state="not-enrolled">
         <td><div class="subject-name">Изборни предмет 2 – Наука о организацији и управљању</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">5</td><td class="ocena-col">7</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">5</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="nauka-org"></div></td>
       </tr>
     </tbody>
   </table>
@@ -462,22 +479,22 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   <table>
     <thead><tr><th>Предмет</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
-      <tr class="row-passed" data-id="medjunarodn" data-espb="6" data-state="passed" data-ocena="6">
+      <tr data-id="medjunarodn" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Међународни односи</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">6</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="medjunarodn"></div></td>
       </tr>
-      <tr data-id="pol-soc-sav" data-espb="6" data-state="enrolled">
+      <tr data-id="pol-soc-sav" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка социологија савременог друштва</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-soc-sav"></div></td>
       </tr>
-      <tr data-id="pol-antr" data-espb="6" data-state="enrolled">
+      <tr data-id="pol-antr" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политичка антропологија и студије етницитета</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-antr"></div></td>
       </tr>
       <!-- izborni 3 - not enrolled -->
@@ -511,22 +528,22 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
         <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="lok-sam"></div></td>
       </tr>
-      <tr class="row-passed" data-id="metod" data-espb="6" data-state="passed" data-ocena="10">
+      <tr data-id="metod" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Методологија политичких наука</div></td>
-        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">10</td>
-        <td style="text-align:center"><span class="badge badge-ok"><span class="dot">●</span> положен</span></td>
-        <td><div class="actions"></div></td>
+        <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
+        <td><div class="actions" data-id="metod"></div></td>
       </tr>
-      <tr data-id="pol-rel" data-espb="6" data-state="enrolled">
+      <tr data-id="pol-rel" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Политикологија религије</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">обавезан</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="pol-rel"></div></td>
       </tr>
-      <tr data-id="autor" data-espb="6" data-state="enrolled">
+      <tr data-id="autor" data-espb="6" data-state="not-enrolled">
         <td><div class="subject-name">Изборни предмет 5 – Ауторитарни режими</div></td>
         <td class="espb-col" style="color:var(--subtext);font-size:10px;">изборни</td><td class="espb-col">6</td><td class="ocena-col">—</td>
-        <td style="text-align:center"><span class="badge badge-fail"><span class="dot">●</span> није положен</span></td>
+        <td style="text-align:center"><span class="badge badge-na"><span class="dot">●</span> није уписан</span></td>
         <td><div class="actions" data-id="autor"></div></td>
       </tr>
     </tbody>
@@ -639,9 +656,10 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 
 <script>
 const ROKS = ['Новембар','Јануар','Фебруар','Март','Април','Јун','Јул','Август','Септембар'];
-const BASE_PASSED = 101;
+const OCENE = [6,7,8,9,10];
+const BASE_PASSED = 0;
 
-// state: { id: { state: 'passed'|'enrolled'|'not-enrolled', rok: str|null, name: str } }
+// state: { id: { state: 'passed'|'enrolled'|'not-enrolled', rok: str|null, grade: number|null, chosenName?: str } }
 let state = {};
 
 function loadState() {
@@ -701,23 +719,31 @@ function recalc() {
   let enrolled_pending = 0;
   let not_enrolled = 0;
 
+  let gradeSum = 0;
+  let gradeCount = 0;
+
   document.querySelectorAll('tr[data-id]').forEach(row => {
     const id = row.dataset.id;
     const espb = parseInt(row.dataset.espb);
     const baseState = row.dataset.state; // original HTML state
+    const baseOcena = row.dataset.ocena;
     const s = state[id];
 
     if (baseState === 'passed') {
-      // already counted in BASE_PASSED
+      // already counted in BASE_PASSED — take grade from original data unless overridden
+      const g = (s && s.grade) ? s.grade : (baseOcena && baseOcena !== 'П' ? parseInt(baseOcena) : null);
+      if (g && !isNaN(g)) { gradeSum += g; gradeCount++; }
     } else if (baseState === 'enrolled') {
       if (s && s.state === 'passed') {
         passed += espb;
+        if (s.grade) { gradeSum += s.grade; gradeCount++; }
       } else {
         enrolled_pending += espb;
       }
     } else if (baseState === 'not-enrolled') {
       if (s && s.state === 'passed') {
         passed += espb;
+        if (s.grade) { gradeSum += s.grade; gradeCount++; }
       } else if (s && s.state === 'enrolled') {
         enrolled_pending += espb;
       } else {
@@ -729,6 +755,13 @@ function recalc() {
   document.getElementById('d-polozeno').textContent = passed;
   document.getElementById('d-preostalo').textContent = enrolled_pending;
   document.getElementById('d-neupisano').textContent = not_enrolled;
+
+  const prosekEl = document.getElementById('d-prosek');
+  if (gradeCount > 0) {
+    prosekEl.textContent = (gradeSum / gradeCount).toFixed(2);
+  } else {
+    prosekEl.textContent = '—';
+  }
 
   const pct = (passed / 240 * 100).toFixed(1);
   document.getElementById('prog-bar').style.width = pct + '%';
@@ -753,11 +786,12 @@ function buildActions(actionsDiv) {
   const currentState = s ? s.state : baseState;
 
   if (currentState === 'passed') {
-    // show rok badge + undo
+    // show rok + grade badge + undo
     const rok = s && s.rok ? s.rok : '—';
+    const grade = s && s.grade ? s.grade : null;
     actionsDiv.innerHTML = `
-      <div style="font-size:10px;color:var(--amber);">📅 ${rok}</div>
-      <div style="font-size:9px;color:var(--muted);cursor:pointer;margin-top:2px;" onclick="undoPass('${id}')">↩ поништи</div>
+      <div style="font-size:10px;color:var(--amber);">📅 ${rok}${grade ? ' · оцена ' + grade : ''}</div>
+      <div class="btn-undo" onclick="undoPass('${id}')">↩ поништи положено</div>
     `;
     return;
   }
@@ -782,34 +816,93 @@ function buildActions(actionsDiv) {
   }
 
   if (currentState === 'enrolled') {
-    // show: checkbox passed + rok selector
+    // show: checkbox passed + rok selector + grade selector (+ unenroll if it was a manual mistake)
+    const canUnenroll = (baseState === 'not-enrolled');
+    const uslovChecked = (s && s.uslov) ? 'checked' : '';
     actionsDiv.innerHTML = `
+      <div class="check-row">
+        <input type="checkbox" id="uslov-${id}" ${uslovChecked} onchange="toggleUslov('${id}', this.checked)">
+        <label for="uslov-${id}">остварен услов</label>
+      </div>
+      <select class="ocena-select" id="ocena-${id}">
+        <option value="">— оцена —</option>
+        ${OCENE.map(o => `<option value="${o}">${o}</option>`).join('')}
+      </select>
+      <select class="rok-select" id="rok-${id}">
+        <option value="">— рок —</option>
+        ${ROKS.map(r => `<option value="${r}">${r}</option>`).join('')}
+      </select>
       <div class="check-row">
         <input type="checkbox" id="chk-${id}" onchange="togglePassed('${id}', this.checked)">
         <label for="chk-${id}">положила</label>
       </div>
-      <select class="rok-select" id="rok-${id}" style="display:block;" onchange="setRok('${id}', this.value)">
-        <option value="">— рок —</option>
-        ${ROKS.map(r => `<option value="${r}">${r}</option>`).join('')}
-      </select>
+      ${canUnenroll ? `<div class="btn-unenroll" onclick="unenrollSubject('${id}')">↩ уклони упис</div>` : ''}
     `;
   }
 }
 
-function showToast() {
-  const messages = [
-    "Мала победа, велики корак! 🎉",
-    "Да тако! Неустављива си! 💪",
-    "Један мање, ти си шампион! ⭐",
-    "Положила! Поносна сам на тебе! 🥳",
-    "Еј, то није мало! Честитам! 🌟",
-    "Кидаш! Само напред! 🚀",
-    "Испит пао, ти стојиш! 😎",
-    "Заслужила си паузу — па онда следећи! ☕",
-    "Диплома се ближи! Осећаш ли је? 🎓",
-    "Па ти си машина! 🔥",
-  ];
-  const msg = messages[Math.floor(Math.random() * messages.length)];
+function toggleUslov(id, checked) {
+  const s = state[id] || { state: 'enrolled' };
+  s.uslov = checked;
+  state[id] = s;
+  saveState();
+  updateRowVisual(id, 'enrolled', null);
+}
+
+const MSG_POOLS = {
+  6: [
+    "Шестица, али положено је положено! {predmet} готов! 😅",
+    "Некад је шестица највећа победа. {predmet} — гурнула си га! 💪",
+    "{predmet} прошао, и то је то што се тражи! ✅",
+    "Није важно колико, важно да је прошло — {predmet} готов! 🙌",
+    "Испит пао, оцена мала, олакшање велико! {predmet} иза тебе! 😌",
+  ],
+  7: [
+    "Солидна седмица за {predmet}! Напред даље! 👍",
+    "{predmet} положен са седмицом — чисто и јасно! ✨",
+    "Седмица стоји, {predmet} скинут са листе! 🎯",
+    "Добро урађено, {predmet} готов са седмицом! 💪",
+  ],
+  8: [
+    "Осмица за {predmet}! Импресивно! 🌟",
+    "{predmet} положен са солидном осмицом! 🔥",
+    "Лепа оцена за леп труд — {predmet} готов са осмицом! 🎉",
+    "Осмица! {predmet} скинут, идемо даље! 🚀",
+  ],
+  9: [
+    "Девет! {predmet} готово одлично! 🌟",
+    "{predmet} са деветком — ово је озбиљно добро! 🔥",
+    "Скоро максимум! {predmet} положен са деветком! 🥳",
+    "Деветка стоји, {predmet} готов сјајно! ✨",
+  ],
+  10: [
+    "ДЕСЕТКА! {predmet} — апсолутни максимум! 🏆",
+    "{predmet} са десетком — генијалко! 🎓🔥",
+    "Пуна оцена! {predmet} освојен као шампион! 🥇",
+    "Максимум за {predmet} — нема боље од овога! 💎",
+  ],
+};
+let msgQueues = {};
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getToastMessage(subject, grade) {
+  const pool = MSG_POOLS[grade] || MSG_POOLS[7];
+  if (!msgQueues[grade] || msgQueues[grade].length === 0) {
+    msgQueues[grade] = shuffle([...pool]);
+  }
+  const template = msgQueues[grade].pop();
+  return template.replace('{predmet}', subject);
+}
+
+function showToast(subject, grade) {
+  const msg = getToastMessage(subject, grade);
   const toast = document.createElement('div');
   toast.textContent = msg;
   toast.style.cssText = `
@@ -828,7 +921,8 @@ function showToast() {
     z-index: 9999;
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
-    white-space: nowrap;
+    max-width: 90vw;
+    text-align: center;
   `;
   document.body.appendChild(toast);
   requestAnimationFrame(() => {
@@ -845,13 +939,25 @@ function showToast() {
 function togglePassed(id, checked) {
   const row = document.querySelector(`tr[data-id="${id}"]`);
   const espb = row ? parseInt(row.dataset.espb) : 0;
-  const rokVal = document.getElementById('rok-' + id);
-  const rok = rokVal ? rokVal.value : '';
 
   if (checked) {
-    state[id] = { state: 'passed', rok: rok, espb: espb };
+    const rokSel = document.getElementById('rok-' + id);
+    const ocenaSel = document.getElementById('ocena-' + id);
+    const rok = rokSel ? rokSel.value : '';
+    const grade = ocenaSel ? parseInt(ocenaSel.value) : NaN;
+
+    if (!grade || isNaN(grade)) {
+      alert('Прво изабери оцену пре него што означиш да је предмет положен.');
+      const chk = document.getElementById('chk-' + id);
+      if (chk) chk.checked = false;
+      return;
+    }
+
+    const subjectName = row ? row.querySelector('.subject-name').textContent.trim() : 'Предмет';
+
+    state[id] = { state: 'passed', rok: rok || null, grade: grade, espb: espb };
     updateRowVisual(id, 'passed', rok);
-    showToast();
+    showToast(subjectName, grade);
   } else {
     const s = state[id] || {};
     s.state = 'enrolled';
@@ -861,13 +967,6 @@ function togglePassed(id, checked) {
   saveState();
   recalc();
   buildActions(document.querySelector(`.actions[data-id="${id}"]`));
-}
-
-function setRok(id, rok) {
-  if (!state[id]) state[id] = {};
-  state[id].rok = rok;
-  saveState();
-  recalc();
 }
 
 function undoPass(id) {
@@ -888,13 +987,29 @@ function enrollSubject(id) {
   buildActions(document.querySelector(`.actions[data-id="${id}"]`));
 }
 
+function unenrollSubject(id) {
+  // reverts an accidentally-enrolled (from not-enrolled) subject back to not-enrolled
+  const nameEl = document.getElementById(id + '-name');
+  if (nameEl && nameEl.dataset.original) {
+    nameEl.textContent = nameEl.dataset.original;
+  }
+  delete state[id];
+  saveState();
+  recalc();
+  updateRowVisual(id, 'not-enrolled', null);
+  buildActions(document.querySelector(`.actions[data-id="${id}"]`));
+}
+
 function confirmElective(id) {
   const sel = document.getElementById('esel-' + id);
   if (!sel || !sel.value) return;
   const chosen = sel.value;
-  // update subject name in table
+  // update subject name in table, remember original for unenroll
   const nameEl = document.getElementById(id + '-name');
-  if (nameEl) nameEl.textContent = chosen;
+  if (nameEl) {
+    if (!nameEl.dataset.original) nameEl.dataset.original = nameEl.textContent;
+    nameEl.textContent = chosen;
+  }
   state[id] = { state: 'enrolled', chosenName: chosen };
   saveState();
   recalc();
@@ -906,17 +1021,22 @@ function updateRowVisual(id, newState, rok) {
   const row = document.querySelector(`tr[data-id="${id}"]`);
   if (!row) return;
   const badgeCell = row.querySelector('td:nth-child(5)');
+  const ocenaCell = row.querySelector('td.ocena-col');
   row.classList.remove('row-passed', 'row-enrolled');
 
   if (newState === 'passed') {
     row.classList.add('row-passed');
-    const rokStr = rok && rok !== '' ? rok : (state[id] && state[id].rok ? state[id].rok : '—');
     badgeCell.innerHTML = `<span class="badge badge-ok"><span class="dot">●</span> положен</span>`;
+    const g = state[id] && state[id].grade ? state[id].grade : (row.dataset.ocena || '—');
+    if (ocenaCell) ocenaCell.textContent = g;
   } else if (newState === 'enrolled') {
     row.classList.add('row-enrolled');
-    badgeCell.innerHTML = `<span class="badge badge-fail"><span class="dot">●</span> није положен</span>`;
+    const uslov = state[id] && state[id].uslov;
+    badgeCell.innerHTML = `<span class="badge badge-fail"><span class="dot">●</span> није положен</span>${uslov ? '<div style="margin-top:4px;font-size:9px;color:var(--green);">✓ услов остварен</div>' : ''}`;
+    if (ocenaCell) ocenaCell.textContent = '—';
   } else {
     badgeCell.innerHTML = `<span class="badge badge-na"><span class="dot">●</span> није уписан</span>`;
+    if (ocenaCell) ocenaCell.textContent = '—';
   }
 }
 
@@ -927,7 +1047,10 @@ function applyStoredState() {
     updateRowVisual(id, s.state, s.rok || null);
     if (s.chosenName) {
       const nameEl = document.getElementById(id + '-name');
-      if (nameEl) nameEl.textContent = s.chosenName;
+      if (nameEl) {
+        if (!nameEl.dataset.original) nameEl.dataset.original = nameEl.textContent;
+        nameEl.textContent = s.chosenName;
+      }
     }
   });
 }
@@ -937,6 +1060,7 @@ function initActions() {
     buildActions(div);
   });
 }
+
 
 // INIT
 loadState();
