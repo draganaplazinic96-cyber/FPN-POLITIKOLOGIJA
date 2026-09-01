@@ -83,8 +83,6 @@ header p { color: var(--subtext); margin-top: 6px; font-size: 11px; letter-spaci
 .progress-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--green), var(--accent2)); transition: width 0.4s ease; }
 .progress-lbl { font-size: 10px; color: var(--subtext); margin-top: 4px; text-align: center; }
 
-/* ── ROK STATS ── */
-
 /* ── CONTENT ── */
 .content { max-width: 960px; margin: 24px auto 0; padding: 0 24px; }
 
@@ -155,12 +153,16 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   display: inline-flex; align-items: center; gap: 4px;
   padding: 3px 8px; border-radius: 20px;
   font-size: 10px; font-weight: 500;
-  letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+  letter-spacing: 0.05em; text-transform: uppercase; white-space: normal;
+  line-height: 1.4; text-align: center;
 }
 .badge-ok  { background: rgba(90,158,122,0.15);  color: var(--green);  border: 1px solid rgba(90,158,122,0.3); }
 .badge-fail{ background: rgba(192,96,96,0.15);   color: var(--red);    border: 1px solid rgba(192,96,96,0.3); }
 .badge-pending{ background: rgba(196,154,69,0.15); color: var(--amber); border: 1px solid rgba(196,154,69,0.3); }
 .badge-na  { background: rgba(74,74,96,0.2);     color: var(--muted);  border: 1px solid rgba(74,74,96,0.4); }
+.badge-enrolled-noconditions { background: rgba(192,96,96,0.15); color: var(--red); border: 1px solid rgba(192,96,96,0.3); }
+.badge-enrolled-condition { background: rgba(123,158,168,0.18); color: var(--accent2); border: 1px solid rgba(123,158,168,0.4); }
+.badge-passed { background: rgba(90,158,122,0.15); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
 .sem-divider td { border-top: 3px solid var(--accent) !important; }
 .dot { font-size: 7px; }
 
@@ -249,6 +251,8 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 
 /* footnote */
 .footnote { font-size: 10px; color: var(--muted); line-height: 1.8; }
+
+.loading-note { text-align: center; padding: 40px; color: var(--subtext); font-size: 12px; }
 </style>
 </head>
 <body>
@@ -263,12 +267,12 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
 <!-- STICKY DASHBOARD -->
 <div id="dashboard">
   <div class="dash-card">
-    <div class="num num-ok" id="d-polozeno">101</div>
+    <div class="num num-ok" id="d-polozeno">0</div>
     <div class="lbl">Положено ЕСПБ</div>
   </div>
   <div class="dash-card">
-    <div class="num num-fail" id="d-preostalo">—</div>
-    <div class="lbl">Преостало (уписано)</div>
+    <div class="num num-fail" id="d-preostalo">0</div>
+    <div class="lbl">Уписано (нема резултат)</div>
   </div>
   <div class="dash-card">
     <div class="num num-na" id="d-neupisano">—</div>
@@ -284,13 +288,11 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   </div>
   <div class="progress-wrap">
     <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="prog-bar" style="width:42.08%"></div>
+      <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
     </div>
-    <div class="progress-lbl" id="prog-lbl">101 / 240 ЕСПБ · 42,1%</div>
+    <div class="progress-lbl" id="prog-lbl">0 / 240 ЕСПБ · 0%</div>
   </div>
 </div>
-
-
 
 <div class="content">
 
@@ -635,26 +637,36 @@ tr.row-enrolled td { background: rgba(196,154,69,0.04); }
   </table>
 </div>
 
-
-
 </div><!-- /content -->
 
 <script>
 const ROKS = ['Новембар','Јануар','Фебруар','Март','Април','Јун','Јул','Август','Септембар'];
 const OCENE = [6,7,8,9,10];
 const BASE_PASSED = 0;
+const STORAGE_KEY = 'subject-state';
 
-// state: { id: { state: 'passed'|'enrolled'|'not-enrolled', rok: str|null, grade: number|null, chosenName?: str } }
+// state: { id: { state: 'passed'|'enrolled'|'not-enrolled', rok: str|null, grade: number|null, uslov: bool, chosenName?: str } }
 let state = {};
 
-function loadState() {
+async function loadState() {
   try {
-    const s = localStorage.getItem('fpn_tracker_v2');
-    if (s) state = JSON.parse(s);
-  } catch(e) {}
+    const result = await window.storage.get(STORAGE_KEY, false);
+    if (result && result.value) {
+      state = JSON.parse(result.value);
+    }
+  } catch (e) {
+    // key doesn't exist yet (fresh start) or read failed — start clean
+    state = {};
+  }
 }
-function saveState() {
-  localStorage.setItem('fpn_tracker_v2', JSON.stringify(state));
+
+async function saveState() {
+  try {
+    const result = await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    if (!result) console.error('Чување није успело.');
+  } catch (e) {
+    console.error('Грешка при чувању стања:', e);
+  }
 }
 
 function getRowState(id) {
@@ -715,7 +727,6 @@ function recalc() {
     const s = state[id];
 
     if (baseState === 'passed') {
-      // already counted in BASE_PASSED — take grade from original data unless overridden
       const g = (s && s.grade) ? s.grade : (baseOcena && baseOcena !== 'П' ? parseInt(baseOcena) : null);
       if (g && !isNaN(g)) { gradeSum += g; gradeCount++; }
     } else if (baseState === 'enrolled') {
@@ -771,7 +782,6 @@ function buildActions(actionsDiv) {
   const currentState = s ? s.state : baseState;
 
   if (currentState === 'passed') {
-    // show rok + grade badge + undo
     const rok = s && s.rok ? s.rok : '—';
     const grade = s && s.grade ? s.grade : null;
     actionsDiv.innerHTML = `
@@ -782,7 +792,6 @@ function buildActions(actionsDiv) {
   }
 
   if (currentState === 'not-enrolled') {
-    // if has elective options, show chooser first
     if (electiveOpts) {
       const opts = electiveOpts.split('|');
       actionsDiv.innerHTML = `
@@ -801,7 +810,6 @@ function buildActions(actionsDiv) {
   }
 
   if (currentState === 'enrolled') {
-    // show: checkbox passed + rok selector + grade selector (+ unenroll if it was a manual mistake)
     const canUnenroll = (baseState === 'not-enrolled');
     const uslovChecked = (s && s.uslov) ? 'checked' : '';
     actionsDiv.innerHTML = `
@@ -826,11 +834,11 @@ function buildActions(actionsDiv) {
   }
 }
 
-function toggleUslov(id, checked) {
+async function toggleUslov(id, checked) {
   const s = state[id] || { state: 'enrolled' };
   s.uslov = checked;
   state[id] = s;
-  saveState();
+  await saveState();
   updateRowVisual(id, 'enrolled', null);
 }
 
@@ -921,7 +929,7 @@ function showToast(subject, grade) {
   }, 3000);
 }
 
-function togglePassed(id, checked) {
+async function togglePassed(id, checked) {
   const row = document.querySelector(`tr[data-id="${id}"]`);
   const espb = row ? parseInt(row.dataset.espb) : 0;
 
@@ -949,54 +957,52 @@ function togglePassed(id, checked) {
     state[id] = s;
     updateRowVisual(id, 'enrolled', null);
   }
-  saveState();
+  await saveState();
   recalc();
   buildActions(document.querySelector(`.actions[data-id="${id}"]`));
 }
 
-function undoPass(id) {
+async function undoPass(id) {
   const row = document.querySelector(`tr[data-id="${id}"]`);
   const baseState = row ? row.dataset.state : 'enrolled';
   state[id] = { state: baseState === 'not-enrolled' ? 'enrolled' : baseState };
-  saveState();
+  await saveState();
   recalc();
   updateRowVisual(id, state[id].state, null);
   buildActions(document.querySelector(`.actions[data-id="${id}"]`));
 }
 
-function enrollSubject(id) {
+async function enrollSubject(id) {
   state[id] = { state: 'enrolled' };
-  saveState();
+  await saveState();
   recalc();
   updateRowVisual(id, 'enrolled', null);
   buildActions(document.querySelector(`.actions[data-id="${id}"]`));
 }
 
-function unenrollSubject(id) {
-  // reverts an accidentally-enrolled (from not-enrolled) subject back to not-enrolled
+async function unenrollSubject(id) {
   const nameEl = document.getElementById(id + '-name');
   if (nameEl && nameEl.dataset.original) {
     nameEl.textContent = nameEl.dataset.original;
   }
   delete state[id];
-  saveState();
+  await saveState();
   recalc();
   updateRowVisual(id, 'not-enrolled', null);
   buildActions(document.querySelector(`.actions[data-id="${id}"]`));
 }
 
-function confirmElective(id) {
+async function confirmElective(id) {
   const sel = document.getElementById('esel-' + id);
   if (!sel || !sel.value) return;
   const chosen = sel.value;
-  // update subject name in table, remember original for unenroll
   const nameEl = document.getElementById(id + '-name');
   if (nameEl) {
     if (!nameEl.dataset.original) nameEl.dataset.original = nameEl.textContent;
     nameEl.textContent = chosen;
   }
   state[id] = { state: 'enrolled', chosenName: chosen };
-  saveState();
+  await saveState();
   recalc();
   updateRowVisual(id, 'enrolled', null);
   buildActions(document.querySelector(`.actions[data-id="${id}"]`));
@@ -1011,13 +1017,17 @@ function updateRowVisual(id, newState, rok) {
 
   if (newState === 'passed') {
     row.classList.add('row-passed');
-    badgeCell.innerHTML = `<span class="badge badge-ok"><span class="dot">●</span> положен</span>`;
+    badgeCell.innerHTML = `<span class="badge badge-passed">положено</span>`;
     const g = state[id] && state[id].grade ? state[id].grade : (row.dataset.ocena || '—');
     if (ocenaCell) ocenaCell.textContent = g;
   } else if (newState === 'enrolled') {
     row.classList.add('row-enrolled');
     const uslov = state[id] && state[id].uslov;
-    badgeCell.innerHTML = `<span class="badge badge-pending"><span class="dot">●</span> уписан</span>${uslov ? '<div style="margin-top:4px;font-size:9px;color:var(--green);">✓ услов остварен</div>' : ''}`;
+    if (uslov) {
+      badgeCell.innerHTML = `<span class="badge badge-enrolled-condition">уписано / неположено / остварен услов</span>`;
+    } else {
+      badgeCell.innerHTML = `<span class="badge badge-enrolled-noconditions">уписано / неположено / без услова</span>`;
+    }
     if (ocenaCell) ocenaCell.textContent = '—';
   } else {
     badgeCell.innerHTML = `<span class="badge badge-na"><span class="dot">●</span> није уписан</span>`;
@@ -1046,21 +1056,14 @@ function initActions() {
   });
 }
 
+async function init() {
+  await loadState();
+  applyStoredState();
+  initActions();
+  recalc();
+}
 
-// INIT
-loadState();
-
-// Tag all rows with their year number based on parent year-block
-document.querySelectorAll('.year-block[data-year]').forEach(block => {
-  const yr = block.dataset.year;
-  block.querySelectorAll('tr[data-id]').forEach(row => {
-    row.dataset.year = yr;
-  });
-});
-
-applyStoredState();
-initActions();
-recalc();
+init();
 </script>
 </body>
 </html>
