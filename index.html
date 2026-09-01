@@ -7,19 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0e0e11;
-  --surface: #16161c;
-  --card: #1d1d26;
-  --border: #2a2a38;
-  --accent: #c9a96e;
-  --accent2: #7b9ea8;
-  --green: #5a9e7a;
-  --red: #c06060;
-  --amber: #c49a45;
-  --purple: #8f7fd6;
-  --muted: #4a4a60;
-  --text: #e8e6f0;
-  --subtext: #8888a8;
+  --bg: #0c0c11;
+  --surface: #131319;
+  --card: #191921;
+  --border: #262631;
+  --accent: #c8a86c;
+  --accent-soft: rgba(200,168,108,0.16);
+  --accent2: #7b96a3;
+  --green: #6ba585;
+  --red: #b56a5c;
+  --amber: #c39a52;
+  --purple: #8f8fb0;
+  --muted: #46465a;
+  --text: #e9e7f0;
+  --text-dim: #b9b7c8;
+  --subtext: #85839a;
   --white: #f5f4fb;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,18 +48,60 @@ font-weight: 900;
 color: var(--white);
 }
 header p { color: var(--subtext); margin-top: 6px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
-.divider { width: 50px; height: 2px; background: var(--accent); margin: 12px auto; }
+.glyph-star { color: var(--accent); font-size: 0.5em; vertical-align: middle; margin-right: 10px; opacity: 0.85; }
+.divider { display: flex; align-items: center; gap: 9px; width: 150px; margin: 14px auto; }
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-star { color: var(--accent); font-size: 11px; line-height: 1; opacity: 0.9; }
 
 /* ── STICKY DASHBOARD ── */
 #dashboard {
+position: relative;
+overflow: hidden;
 background: var(--surface);
 border-bottom: 1px solid var(--border);
-padding: 14px 24px;
+padding: 16px 24px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+align-items: center;
+justify-content: center;
+}
+#dashboard::before {
+content: '';
+position: absolute;
+inset: 0;
+pointer-events: none;
+opacity: 0.55;
+background-image:
+  radial-gradient(1px 1px at 8% 22%, rgba(200,168,108,0.4) 0, transparent 60%),
+  radial-gradient(1px 1px at 22% 74%, rgba(200,168,108,0.28) 0, transparent 60%),
+  radial-gradient(1.4px 1.4px at 58% 18%, rgba(200,168,108,0.32) 0, transparent 60%),
+  radial-gradient(1px 1px at 78% 64%, rgba(200,168,108,0.22) 0, transparent 60%),
+  radial-gradient(1px 1px at 42% 88%, rgba(200,168,108,0.26) 0, transparent 60%),
+  radial-gradient(1.4px 1.4px at 93% 32%, rgba(200,168,108,0.24) 0, transparent 60%),
+  radial-gradient(1px 1px at 65% 45%, rgba(200,168,108,0.18) 0, transparent 60%);
+}
+.dash-row, .progress-wrap, .dash-avg-wrap { position: relative; z-index: 1; }
+.dash-row {
+display: flex;
+flex-wrap: wrap;
+gap: 14px;
+align-items: center;
+justify-content: center;
+width: 100%;
+}
+.dash-group {
 display: flex;
 flex-wrap: wrap;
 gap: 10px;
 align-items: center;
 justify-content: center;
+}
+.dash-divider {
+width: 1px;
+height: 34px;
+background: var(--border);
+margin: 0 4px;
 }
 .dash-card {
 background: var(--card);
@@ -76,13 +120,24 @@ line-height: 1;
 .dash-card .lbl { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtext); margin-top: 3px; }
 .num-ok { color: var(--green); }
 .num-fail { color: var(--red); }
+.num-fali { color: var(--red); }
+.num-purple { color: var(--purple); }
 .num-na { color: var(--muted); }
 .num-total { color: var(--accent); }
 .num-avg { color: var(--accent2); }
-.progress-wrap { flex: 1; min-width: 180px; max-width: 300px; }
+.progress-wrap { width: 100%; max-width: 640px; margin: 0 auto; }
 .progress-bar-bg { background: var(--card); border-radius: 20px; height: 8px; overflow: hidden; }
 .progress-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--green), var(--accent2)); transition: width 0.4s ease; }
+.progress-wrap.complete .progress-bar-fill { background: linear-gradient(90deg, var(--accent), var(--green)); box-shadow: 0 0 10px rgba(200,168,108,0.55); }
 .progress-lbl { font-size: 10px; color: var(--subtext); margin-top: 4px; text-align: center; }
+.progress-lbl .glyph-star { font-size: 1em; margin-left: 3px; margin-right: 0; }
+.dash-avg-wrap {
+width: 100%;
+display: flex;
+justify-content: center;
+padding-top: 10px;
+border-top: 1px dashed var(--border);
+}
 
 /* ── CONTENT ── */
 .content { max-width: 960px; margin: 24px auto 0; padding: 0 24px; }
@@ -102,9 +157,17 @@ color: var(--amber);
 border: 1px solid rgba(196,154,69,0.35);
 }
 .year-status.očišćena {
-background: rgba(90,158,122,0.15);
+background: rgba(107,165,133,0.14);
 color: var(--green);
-border: 1px solid rgba(90,158,122,0.35);
+border: 1px solid rgba(107,165,133,0.35);
+}
+.year-status .glyph-star { font-size: 1em; margin-right: 2px; opacity: 0.9; }
+.year-ratio {
+font-size: 10.5px;
+color: var(--accent2);
+font-family: 'DM Mono', monospace;
+letter-spacing: 0.02em;
+white-space: nowrap;
 }
 
 /* ── YEAR BLOCK ── */
@@ -116,6 +179,7 @@ color: var(--accent);
 letter-spacing: 0.04em;
 margin-bottom: 12px;
 display: flex; align-items: center; gap: 12px;
+flex-wrap: wrap;
 }
 .year-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
@@ -141,10 +205,13 @@ font-weight: 400;
 th.c { text-align: center; }
 td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 tr td { border-bottom: none; }
-tr.row-passed td { background: rgba(90,158,122,0.06); }
-tr.row-enrolled td { background: rgba(196,154,69,0.04); }
+tr.row-passed td { background: rgba(107,165,133,0.025); }
+tr.row-passed td:first-child { box-shadow: inset 3px 0 0 0 rgba(107,165,133,0.5); }
+tr.row-passed .subject-name { color: var(--text-dim); }
+tr.row-enrolled td { background: rgba(195,154,82,0.035); }
+tr.row-enrolled td:first-child { box-shadow: inset 3px 0 0 0 rgba(195,154,82,0.4); }
 
-.subject-name { color: var(--white); font-size: 12.5px; line-height: 1.3; }
+.subject-name { color: var(--white); font-size: 12.5px; line-height: 1.3; transition: color 0.2s; }
 .subject-sub { color: var(--subtext); font-size: 10px; margin-top: 2px; font-style: italic; }
 .espb-col { text-align: center; color: var(--accent2); font-weight: 500; }
 .ocena-col { text-align: center; color: var(--accent); font-size: 12px; }
@@ -158,71 +225,163 @@ letter-spacing: 0.05em; text-transform: uppercase; white-space: normal;
 line-height: 1.4; text-align: center;
 max-width: 150px;
 }
-.badge-ok  { background: rgba(90,158,122,0.15);  color: var(--green);  border: 1px solid rgba(90,158,122,0.3); }
-.badge-fail{ background: rgba(192,96,96,0.15);   color: var(--red);    border: 1px solid rgba(192,96,96,0.3); }
-.badge-pending{ background: rgba(196,154,69,0.15); color: var(--amber); border: 1px solid rgba(196,154,69,0.3); }
-.badge-na  { background: rgba(74,74,96,0.2);     color: var(--muted);  border: 1px solid rgba(74,74,96,0.4); }
-.badge-enrolled-noconditions { background: rgba(192,96,96,0.15); color: var(--red); border: 1px solid rgba(192,96,96,0.3); }
-.badge-enrolled-condition { background: rgba(143,127,214,0.18); color: var(--purple); border: 1px solid rgba(143,127,214,0.4); }
-.badge-passed { background: rgba(90,158,122,0.15); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
+.badge-ok  { background: rgba(107,165,133,0.14);  color: var(--green);  border: 1px solid rgba(107,165,133,0.3); }
+.badge-fail{ background: rgba(181,106,92,0.14);   color: var(--red);    border: 1px solid rgba(181,106,92,0.3); }
+.badge-pending{ background: rgba(195,154,82,0.14); color: var(--amber); border: 1px solid rgba(195,154,82,0.3); }
+.badge-na  { background: rgba(70,70,90,0.2);     color: var(--muted);  border: 1px solid rgba(70,70,90,0.4); }
+.badge-enrolled-noconditions { background: rgba(181,106,92,0.14); color: var(--red); border: 1px solid rgba(181,106,92,0.3); }
+.badge-enrolled-condition { background: rgba(143,143,176,0.16); color: var(--purple); border: 1px solid rgba(143,143,176,0.35); }
+.badge-passed { background: rgba(107,165,133,0.14); color: var(--green); border: 1px solid rgba(107,165,133,0.3); font-weight: 500; }
+.badge-passed .glyph-star { font-size: 9px; margin-right: 1px; opacity: 0.9; }
 .sem-divider td { border-top: 3px solid var(--accent) !important; }
 .dot { font-size: 7px; }
 
+.star-pop {
+display: inline-block;
+margin-left: 5px;
+color: var(--accent);
+font-size: 12px;
+animation: starPop 0.85s ease forwards;
+}
+@keyframes starPop {
+0%   { opacity: 0; transform: scale(0.4) translateY(3px); }
+30%  { opacity: 1; transform: scale(1.2) translateY(-2px); }
+100% { opacity: 0; transform: scale(1) translateY(-9px); }
+}
+
 /* ── ACTIONS CELL ── */
-.actions { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; min-width: 180px; }
+.actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; min-width: 190px; }
 
-/* checkbox row */
-.check-row { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-.check-row input[type=checkbox] { appearance: none; width: 15px; height: 15px; border: 1px solid var(--border); border-radius: 3px; background: var(--surface); cursor: pointer; flex-shrink: 0; position: relative; transition: background 0.15s, border-color 0.15s; }
-.check-row input[type=checkbox]:checked { background: var(--green); border-color: var(--green); }
-.check-row input[type=checkbox]:checked::after { content: '✓'; position: absolute; top: -1px; left: 2px; font-size: 11px; color: #fff; font-family: sans-serif; }
-.check-row label { font-size: 10px; color: var(--subtext); cursor: pointer; user-select: none; }
+/* modern compact toggle-chip (replaces native checkbox row) — used for "остварен услов" */
+.toggle-chip {
+position: relative;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+padding: 4px 10px 4px 5px;
+border-radius: 20px;
+border: 1px solid var(--border);
+background: var(--surface);
+cursor: pointer;
+user-select: none;
+transition: border-color 0.15s, background 0.15s;
+}
+.toggle-chip:hover { border-color: var(--accent2); }
+.toggle-chip input {
+position: absolute;
+opacity: 0;
+width: 1px; height: 1px;
+margin: 0;
+}
+.toggle-chip-mark {
+width: 13px; height: 13px;
+border-radius: 50%;
+border: 1px solid var(--border);
+background: var(--bg);
+display: inline-flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+transition: border-color 0.15s;
+}
+.toggle-chip-mark::after {
+content: '';
+width: 6px; height: 6px;
+border-radius: 50%;
+background: transparent;
+transition: background 0.15s;
+}
+.toggle-chip input:checked ~ .toggle-chip-mark { border-color: var(--green); }
+.toggle-chip input:checked ~ .toggle-chip-mark::after { background: var(--green); }
+.toggle-chip input:focus-visible ~ .toggle-chip-mark { outline: 2px solid var(--accent2); outline-offset: 2px; }
+.toggle-chip-text { font-size: 9.5px; letter-spacing: 0.02em; color: var(--subtext); transition: color 0.15s; }
+.toggle-chip input:checked ~ .toggle-chip-text { color: var(--text-dim); }
 
-/* rok selector */
+/* compact modern selects — rok / ocena / academska godina */
 .rok-select, .ocena-select {
 font-family: 'DM Mono', monospace;
 font-size: 10px;
 background: var(--surface);
 color: var(--amber);
 border: 1px solid var(--border);
-border-radius: 5px;
-padding: 3px 7px;
+border-radius: 7px;
+padding: 5px 22px 5px 9px;
 cursor: pointer;
 outline: none;
 display: block;
+appearance: none;
+-webkit-appearance: none;
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0L4 6L8 0Z' fill='%2385839a'/></svg>");
+background-repeat: no-repeat;
+background-position: right 8px center;
+transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ocena-select { color: var(--accent2); }
-.rok-select, .ocena-select { border-color: var(--amber); }
+.rok-select { border-color: rgba(195,154,82,0.4); }
+.ocena-select { color: var(--accent2); border-color: rgba(123,150,163,0.4); }
+.rok-select:hover, .ocena-select:hover { border-color: var(--accent2); }
+.rok-select:focus-visible, .ocena-select:focus-visible {
+border-color: var(--accent2);
+box-shadow: 0 0 0 2px rgba(123,150,163,0.28);
+}
 
-/* enroll button */
-.btn-enroll {
+/* primary action — "Упиши" (most prominent action in the row) */
+.btn-primary-pill {
+font-family: 'DM Mono', monospace;
+font-size: 10.5px;
+letter-spacing: 0.02em;
+background: linear-gradient(135deg, rgba(200,168,108,0.2), rgba(200,168,108,0.08));
+color: var(--accent);
+border: 1px solid rgba(200,168,108,0.5);
+border-radius: 20px;
+padding: 6px 15px;
+cursor: pointer;
+transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.btn-primary-pill:hover { background: rgba(200,168,108,0.3); border-color: var(--accent); }
+.btn-primary-pill:active { transform: scale(0.96); }
+.btn-primary-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* confirm-pass action — "Означи као положено" (secondary emphasis, calmer than enroll) */
+.btn-confirm-pass { position: relative; display: inline-flex; cursor: pointer; }
+.btn-confirm-pass input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.btn-confirm-pass-inner {
 font-family: 'DM Mono', monospace;
 font-size: 10px;
-background: transparent;
-color: var(--accent2);
-border: 1px solid var(--accent2);
-border-radius: 5px;
-padding: 4px 10px;
-cursor: pointer;
-transition: background 0.15s;
+letter-spacing: 0.02em;
+padding: 6px 13px;
+border-radius: 8px;
+background: rgba(107,165,133,0.1);
+color: var(--green);
+border: 1px solid rgba(107,165,133,0.4);
+transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
-.btn-enroll { background: rgba(123,158,168,0.15); }
+.btn-confirm-pass-inner:hover { background: rgba(107,165,133,0.2); border-color: var(--green); }
+.btn-confirm-pass input:active ~ .btn-confirm-pass-inner { transform: scale(0.96); }
+.btn-confirm-pass input:focus-visible ~ .btn-confirm-pass-inner { outline: 2px solid var(--green); outline-offset: 2px; }
 
+/* quiet/tertiary actions — undo / ukloni upis */
 .btn-unenroll, .btn-undo {
-font-size: 9px;
-color: var(--muted);
+font-family: 'DM Mono', monospace;
+font-size: 9.5px;
+color: var(--subtext);
+background: none;
+border: none;
 cursor: pointer;
-margin-top: 2px;
+padding: 2px 3px;
+margin-top: 1px;
 text-align: right;
+letter-spacing: 0.02em;
 user-select: none;
+transition: color 0.15s;
 }
-.btn-unenroll, .btn-undo { color: var(--red); }
+.btn-unenroll:hover, .btn-undo:hover { color: var(--red); text-decoration: underline; text-underline-offset: 2px; }
+.btn-unenroll:focus-visible, .btn-undo:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 3px; }
 
 /* elective chooser */
 .elective-chooser {
 display: none;
 flex-direction: column;
-gap: 4px;
+gap: 5px;
 width: 100%;
 }
 .elective-chooser select {
@@ -231,63 +390,246 @@ font-size: 10px;
 background: var(--surface);
 color: var(--white);
 border: 1px solid var(--border);
-border-radius: 5px;
-padding: 4px 8px;
+border-radius: 7px;
+padding: 5px 22px 5px 9px;
 cursor: pointer;
 outline: none;
 width: 100%;
+appearance: none;
+-webkit-appearance: none;
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0L4 6L8 0Z' fill='%2385839a'/></svg>");
+background-repeat: no-repeat;
+background-position: right 8px center;
+transition: border-color 0.15s, box-shadow 0.15s;
 }
-.elective-chooser select { border-color: var(--accent2); }
+.elective-chooser select { border-color: rgba(123,150,163,0.4); }
+.elective-chooser select:hover { border-color: var(--accent2); }
+.elective-chooser select:focus-visible { border-color: var(--accent2); box-shadow: 0 0 0 2px rgba(123,150,163,0.28); }
 .btn-confirm-elective {
 font-family: 'DM Mono', monospace;
 font-size: 10px;
-background: var(--accent2);
-color: var(--bg);
-border: none;
-border-radius: 5px;
-padding: 4px 10px;
+letter-spacing: 0.02em;
+background: linear-gradient(135deg, rgba(123,150,163,0.28), rgba(123,150,163,0.14));
+color: var(--white);
+border: 1px solid rgba(123,150,163,0.5);
+border-radius: 8px;
+padding: 5px 12px;
 cursor: pointer;
 font-weight: 500;
 align-self: flex-end;
+transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
+.btn-confirm-elective:hover { background: rgba(123,150,163,0.4); border-color: var(--accent2); }
+.btn-confirm-elective:active { transform: scale(0.96); }
+.btn-confirm-elective:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
+
+/* summary shown once a subject is marked passed */
+.passed-summary { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.passed-summary-item { font-size: 10px; color: var(--subtext); letter-spacing: 0.02em; }
+.passed-summary-grade { font-size: 11px; color: var(--accent); font-weight: 500; }
 
 /* footnote */
 .footnote { font-size: 10px; color: var(--muted); line-height: 1.8; }
 
 .loading-note { text-align: center; padding: 40px; color: var(--subtext); font-size: 12px; }
+
+/* ── STATISTIKA ── */
+.stats-section { margin-top: 32px; margin-bottom: 8px; }
+.stats-title {
+font-family: 'Playfair Display', serif;
+font-size: 17px; font-weight: 700;
+color: var(--accent);
+letter-spacing: 0.04em;
+margin-bottom: 12px;
+display: flex; align-items: center; gap: 12px;
+}
+.stats-title .glyph-moon { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--accent2); opacity: 0.85; font-weight: 400; }
+.stats-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 12px;
+}
+.stat-card {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 14px 16px;
+}
+.stat-card .stat-lbl {
+font-size: 10px;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(--subtext);
+margin-bottom: 6px;
+}
+.stat-card .stat-val {
+font-family: 'Playfair Display', serif;
+font-size: 16px;
+font-weight: 700;
+color: var(--white);
+line-height: 1.35;
+}
+.stat-card.best .stat-val { color: var(--green); }
+.stat-card.worst .stat-val { color: var(--red); }
+.stat-card.zero .stat-val { color: var(--muted); font-family: 'DM Mono', monospace; font-weight: 400; font-size: 13px; }
+
+/* ── BACKUP / SHARE MENU (discreet, secondary) ── */
+#backup-menu-wrap { position: fixed; top: 16px; right: 16px; z-index: 500; }
+#backup-menu-btn {
+width: 30px; height: 30px;
+border-radius: 50%;
+background: var(--card);
+border: 1px solid var(--border);
+color: var(--subtext);
+font-size: 15px;
+line-height: 1;
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+transition: border-color 0.15s, color 0.15s;
+}
+#backup-menu-btn:hover { border-color: var(--accent2); color: var(--text); }
+#backup-menu-btn:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
+#backup-menu-panel {
+position: absolute;
+top: 38px; right: 0;
+min-width: 232px;
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 10px;
+padding: 6px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+display: flex;
+flex-direction: column;
+gap: 2px;
+}
+.menu-item {
+display: block;
+width: 100%;
+text-align: left;
+background: none;
+border: none;
+color: var(--text-dim);
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+letter-spacing: 0.01em;
+padding: 8px 10px;
+border-radius: 6px;
+cursor: pointer;
+transition: background 0.15s, color 0.15s;
+}
+.menu-item:hover { background: rgba(200,168,108,0.08); color: var(--text); }
+.menu-item:focus-visible { outline: 2px solid var(--accent2); outline-offset: -2px; }
+.menu-divider { height: 1px; background: var(--border); margin: 4px 2px; }
+.menu-hint { font-size: 9px; color: var(--muted); padding: 2px 10px 6px; line-height: 1.5; }
+#share-link-box { display: flex; gap: 6px; padding: 4px 6px 8px; }
+#share-link-input {
+flex: 1;
+min-width: 0;
+font-family: 'DM Mono', monospace;
+font-size: 9.5px;
+background: var(--surface);
+color: var(--subtext);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 5px 7px;
+}
+#share-link-input:focus-visible { outline: 2px solid var(--accent2); outline-offset: 1px; }
+#btn-copy-link {
+font-family: 'DM Mono', monospace;
+font-size: 10px;
+background: rgba(200,168,108,0.14);
+color: var(--accent);
+border: 1px solid rgba(200,168,108,0.4);
+border-radius: 6px;
+padding: 5px 9px;
+cursor: pointer;
+white-space: nowrap;
+transition: background 0.15s, border-color 0.15s;
+}
+#btn-copy-link:hover { background: rgba(200,168,108,0.24); border-color: var(--accent); }
+#btn-copy-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#btn-close-share {
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+background: none;
+color: var(--subtext);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 5px 8px;
+cursor: pointer;
+transition: color 0.15s, border-color 0.15s;
+}
+#btn-close-share:hover { color: var(--red); border-color: var(--red); }
+#btn-close-share:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* ── VIEW-ONLY (shared snapshot) MODE ── */
+#view-only-banner {
+text-align: center;
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+letter-spacing: 0.04em;
+color: var(--accent2);
+background: rgba(123,150,163,0.08);
+border-bottom: 1px solid var(--border);
+padding: 9px 12px;
+}
+#view-only-banner .glyph-star { color: var(--accent); font-size: 1em; margin: 0 0 0 5px; }
+.view-only-note { font-size: 10px; color: var(--subtext); }
 </style>
 
 </head>
 <body>
 
+<div id="view-only-banner" hidden>Преглед дељеног напретка <span class="glyph-star">✦</span></div>
+
+<div id="backup-menu-wrap">
+  <button type="button" id="backup-menu-btn" aria-haspopup="true" aria-expanded="false" title="Резервна копија и дељење">⋯</button>
+  <div id="backup-menu-panel" hidden>
+    <button type="button" class="menu-item" id="btn-share">Подели мој напредак</button>
+    <div id="share-link-box" hidden>
+      <input type="text" id="share-link-input" readonly aria-label="Линк за дељење">
+      <button type="button" id="btn-copy-link">Копирај линк</button>
+      <button type="button" id="btn-close-share" title="Сакриј линк">✕</button>
+    </div>
+  </div>
+</div>
+
 <header>
-  <h1>Политиколошке студије</h1>
+  <h1><span class="glyph-star">✦</span>Политиколошке студије</h1>
   <p style="margin-top:6px;font-size:14px;letter-spacing:0.04em;">Драгана Плазинић</p>
-  <div class="divider"></div>
+  <div class="divider"><span class="divider-line"></span><span class="divider-star">✦</span><span class="divider-line"></span></div>
   <p>Факултет политичких наука · Акредитација 2022</p>
 </header>
 
 <!-- STICKY DASHBOARD -->
 <div id="dashboard">
-  <div class="dash-card">
-    <div class="num num-ok" id="d-polozeno">0</div>
-    <div class="lbl">Положено ЕСПБ</div>
-  </div>
-  <div class="dash-card">
-    <div class="num num-fail" id="d-preostalo">0</div>
-    <div class="lbl">Уписано (нема резултат)</div>
-  </div>
-  <div class="dash-card">
-    <div class="num num-na" id="d-neupisano">—</div>
-    <div class="lbl">Није уписано</div>
-  </div>
-  <div class="dash-card">
-    <div class="num num-total">240</div>
-    <div class="lbl">Укупно за диплому</div>
-  </div>
-  <div class="dash-card">
-    <div class="num num-avg" id="d-prosek">—</div>
-    <div class="lbl">Просечна оцена</div>
+  <div class="dash-row">
+    <div class="dash-group">
+      <div class="dash-card">
+        <div class="num num-total">240</div>
+        <div class="lbl">Укупно за диплому</div>
+      </div>
+      <div class="dash-card">
+        <div class="num num-ok" id="d-polozeno">0</div>
+        <div class="lbl">Освојено ЕСПБ</div>
+      </div>
+      <div class="dash-card">
+        <div class="num num-fali" id="d-fali">240</div>
+        <div class="lbl">Фали ЕСПБ</div>
+      </div>
+    </div>
+    <div class="dash-divider"></div>
+    <div class="dash-group">
+      <div class="dash-card">
+        <div class="num num-purple" id="d-preostalo">0</div>
+        <div class="lbl">Уписано / неположено</div>
+      </div>
+      <div class="dash-card">
+        <div class="num num-na" id="d-neupisano">—</div>
+        <div class="lbl">Није уписано</div>
+      </div>
+    </div>
   </div>
   <div class="progress-wrap">
     <div class="progress-bar-bg">
@@ -295,13 +637,19 @@ align-self: flex-end;
     </div>
     <div class="progress-lbl" id="prog-lbl">0 / 240 ЕСПБ · 0%</div>
   </div>
+  <div class="dash-avg-wrap">
+    <div class="dash-card">
+      <div class="num num-avg" id="d-prosek">—</div>
+      <div class="lbl">Просечна оцена</div>
+    </div>
+  </div>
 </div>
 
 <div class="content">
 
 <!-- ══ ПРВА ГОДИНА ══ -->
 <div class="year-block" data-year="1" style="margin-top:24px;">
-  <div class="year-title">Прва година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 1–2</span> <span class="year-status" id="ystatus-1"></span></div>
+  <div class="year-title">Прва година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 1–2</span> <span class="year-ratio" id="yratio-1"></span> <span class="year-status" id="ystatus-1"></span></div>
   <table>
     <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
@@ -388,7 +736,7 @@ align-self: flex-end;
 
 <!-- ══ ДРУГА ГОДИНА ══ -->
 <div class="year-block" data-year="2">
-  <div class="year-title">Друга година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 3–4</span> <span class="year-status" id="ystatus-2"></span></div>
+  <div class="year-title">Друга година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 3–4</span> <span class="year-ratio" id="yratio-2"></span> <span class="year-status" id="ystatus-2"></span></div>
   <table>
     <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
@@ -475,7 +823,7 @@ align-self: flex-end;
 
 <!-- ══ ТРЕЋА ГОДИНА ══ -->
 <div class="year-block" data-year="3">
-  <div class="year-title">Трећа година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 5–6</span> <span class="year-status" id="ystatus-3"></span></div>
+  <div class="year-title">Трећа година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 5–6</span> <span class="year-ratio" id="yratio-3"></span> <span class="year-status" id="ystatus-3"></span></div>
   <table>
     <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
@@ -555,7 +903,7 @@ align-self: flex-end;
 
 <!-- ══ ЧЕТВРТА ГОДИНА ══ -->
 <div class="year-block" data-year="4">
-  <div class="year-title">Четврта година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 7–8</span> <span class="year-status" id="ystatus-4"></span></div>
+  <div class="year-title">Четврта година <span style="font-size:11px;color:var(--subtext);font-family:'DM Mono'">сем. 7–8</span> <span class="year-ratio" id="yratio-4"></span> <span class="year-status" id="ystatus-4"></span></div>
   <table>
     <thead><tr><th>Предмет</th><th class="c">Сем.</th><th class="c">Тип</th><th class="c">ЕСПБ</th><th class="c">Оцена</th><th class="c">Статус</th><th class="c">Акција</th></tr></thead>
     <tbody>
@@ -640,14 +988,34 @@ align-self: flex-end;
   </table>
 </div>
 
+<!-- ══ СТАТИСТИКА ══ -->
+<div class="stats-section">
+  <div class="stats-title"><span class="glyph-moon">☾</span>Статистика</div>
+  <div class="stats-grid">
+    <div class="stat-card best">
+      <div class="stat-lbl">Најуспешнија година</div>
+      <div class="stat-val" id="stat-best">—</div>
+    </div>
+    <div class="stat-card worst">
+      <div class="stat-lbl">Најнеуспешнија година</div>
+      <div class="stat-val" id="stat-worst">—</div>
+    </div>
+    <div class="stat-card zero">
+      <div class="stat-lbl">Године без положеног испита</div>
+      <div class="stat-val" id="stat-zero">—</div>
+    </div>
+  </div>
+</div>
+
 </div><!-- /content -->
 
 <script>
-const ROKS = ['Новембар','Јануар','Фебруар','Март','Април','Јун','Јул','Август','Септембар'];
+const ROKS = ['Јануар','Фебруар','Март','Април','Мај','Јун','Јул','Август','Септембар','Октобар','Новембар','Децембар'];
 const OCENE = [6,7,8,9,10];
 const ACADEMIC_YEARS = ['2015/16','2016/17','2017/18','2018/19','2019/20','2020/21','2021/22','2022/23','2023/24','2024/25','2025/26','2026/27','2027/28','2028/29','2029/30'];
 const BASE_PASSED = 0;
 const STORAGE_KEY = 'subject-state';
+const YEAR_LABELS = { 1: 'Прва година', 2: 'Друга година', 3: 'Трећа година', 4: 'Четврта година' };
 
 /*
   Нови модел стања по предмету (независне boolean вредности,
@@ -664,6 +1032,7 @@ const STORAGE_KEY = 'subject-state';
   }
 */
 let state = {};
+let VIEW_ONLY = false;
 
 async function loadState() {
   try {
@@ -715,7 +1084,7 @@ function ensureState(id) {
 // DERIVED STATUS: statuse se uvek racuna iz enrolled/uslov/passed, nikad ne cuva kao posebna vrednost
 function computeStatus(s) {
   if (s.passed) {
-    return { text: 'ПОЛОЖЕНО', cls: 'badge-passed', withDot: false };
+    return { text: '<span class="glyph-star">✦</span>ПОЛОЖЕНО', cls: 'badge-passed', withDot: false };
   }
   if (s.enrolled && !s.uslov) {
     return { text: 'УПИСАНО / БЕЗ УСЛОВА', cls: 'badge-enrolled-noconditions', withDot: false };
@@ -754,16 +1123,95 @@ function updateYearStatuses() {
       }
     });
 
-    badge.textContent = '';
+    badge.innerHTML = '';
     badge.className = 'year-status';
     if (allPassed) {
-      badge.textContent = 'Очишћена година';
+      badge.innerHTML = '<span class="glyph-star">✦</span> Очишћена година';
       badge.classList.add('očišćena');
     } else if (allEnrolledOrPassed) {
       badge.textContent = 'Одслушана година';
       badge.classList.add('odslušana');
     }
   });
+}
+
+// Однос положених ЕСПБ / укупно ЕСПБ те године, испод наслова сваке године
+function updateYearRatios() {
+  [1,2,3,4].forEach(yr => {
+    const ratioEl = document.getElementById('yratio-' + yr);
+    if (!ratioEl) return;
+    const rows = document.querySelectorAll(`tr[data-year="${yr}"]`);
+    let total = 0, passed = 0;
+    rows.forEach(row => {
+      const espb = parseInt(row.dataset.espb) || 0;
+      total += espb;
+      const s = getRowState(row.dataset.id);
+      if (s.passed) passed += espb;
+    });
+    const pct = total ? Math.round(passed / total * 100) : 0;
+    ratioEl.textContent = `${passed} / ${total} ЕСПБ · ${pct}%`;
+  });
+}
+
+// Статистика по годинама — најуспешнија / најнеуспешнија / без положеног
+function computeYearStats() {
+  const perYear = {};
+  [1,2,3,4].forEach(yr => { perYear[yr] = { total: 0, passed: 0, gradeSum: 0, gradeCount: 0 }; });
+
+  document.querySelectorAll('tr[data-id]').forEach(row => {
+    const yr = row.dataset.year;
+    const espb = parseInt(row.dataset.espb) || 0;
+    const s = getRowState(row.dataset.id);
+    if (!perYear[yr]) return;
+    perYear[yr].total += espb;
+    if (s.passed) {
+      perYear[yr].passed += espb;
+      if (s.grade) { perYear[yr].gradeSum += s.grade; perYear[yr].gradeCount++; }
+    }
+  });
+
+  const bestEl = document.getElementById('stat-best');
+  const worstEl = document.getElementById('stat-worst');
+  const zeroEl = document.getElementById('stat-zero');
+  if (!bestEl || !worstEl || !zeroEl) return;
+
+  const zeroYears = [];
+  const activeYears = []; // године које имају бар један положен предмет
+
+  [1,2,3,4].forEach(yr => {
+    const d = perYear[yr];
+    if (d.gradeCount === 0) {
+      zeroYears.push(yr);
+    } else {
+      const avg = d.gradeSum / d.gradeCount;
+      const ratio = d.total ? d.passed / d.total : 0;
+      activeYears.push({ yr, avg, ratio, passed: d.passed, total: d.total });
+    }
+  });
+
+  zeroEl.textContent = zeroYears.length
+    ? zeroYears.map(yr => YEAR_LABELS[yr]).join(', ')
+    : 'нема — свака година има бар један положен испит';
+
+  if (activeYears.length === 0) {
+    bestEl.textContent = 'нема довољно података';
+    worstEl.textContent = 'нема довољно података';
+    return;
+  }
+
+  const sortedBest = [...activeYears].sort((a, b) => (b.avg - a.avg) || (b.ratio - a.ratio));
+  const sortedWorst = [...activeYears].sort((a, b) => (a.avg - b.avg) || (a.ratio - b.ratio));
+
+  const best = sortedBest[0];
+  const worst = sortedWorst[0];
+
+  bestEl.textContent = `${YEAR_LABELS[best.yr]} — ${best.passed}/${best.total} ЕСПБ, просек ${best.avg.toFixed(2)}`;
+
+  if (activeYears.length > 1 && worst.yr !== best.yr) {
+    worstEl.textContent = `${YEAR_LABELS[worst.yr]} — ${worst.passed}/${worst.total} ЕСПБ, просек ${worst.avg.toFixed(2)}`;
+  } else {
+    worstEl.textContent = 'нема довољно података';
+  }
 }
 
 function recalc() {
@@ -792,6 +1240,7 @@ function recalc() {
   document.getElementById('d-polozeno').textContent = passed;
   document.getElementById('d-preostalo').textContent = enrolled_pending;
   document.getElementById('d-neupisano').textContent = not_enrolled;
+  document.getElementById('d-fali').textContent = Math.max(240 - passed, 0);
 
   const prosekEl = document.getElementById('d-prosek');
   if (gradeCount > 0) {
@@ -801,10 +1250,20 @@ function recalc() {
   }
 
   const pct = (passed / 240 * 100).toFixed(1);
+  const progWrap = document.querySelector('.progress-wrap');
+  const progLbl = document.getElementById('prog-lbl');
   document.getElementById('prog-bar').style.width = pct + '%';
-  document.getElementById('prog-lbl').textContent = passed + ' / 240 ЕСПБ · ' + pct + '%';
+  if (passed >= 240) {
+    progWrap.classList.add('complete');
+    progLbl.innerHTML = passed + ' / 240 ЕСПБ · ' + pct + '% <span class="glyph-star">✦</span>';
+  } else {
+    progWrap.classList.remove('complete');
+    progLbl.textContent = passed + ' / 240 ЕСПБ · ' + pct + '%';
+  }
 
   updateYearStatuses();
+  updateYearRatios();
+  computeYearStats();
 }
 
 function buildActions(actionsDiv) {
@@ -814,13 +1273,21 @@ function buildActions(actionsDiv) {
   const electiveOpts = actionsDiv.dataset.electiveOpts;
   const s = getRowState(id);
 
+  if (VIEW_ONLY) {
+    renderReadOnlyActions(actionsDiv, id, s);
+    return;
+  }
+
   // ако је положено — приказујемо само сажетак и дугме за поништавање
   if (s.passed) {
     const rok = s.rok || '—';
     const grade = s.grade || null;
     const academicYear = s.academicYear || '—';
     actionsDiv.innerHTML = `
-      <div style="font-size:10px;color:var(--amber);">📅 ${rok} · ${academicYear}${grade ? ' · оцена ' + grade : ''}</div>
+      <div class="passed-summary">
+        <span class="passed-summary-item">${rok} · ${academicYear}</span>
+        ${grade ? `<span class="passed-summary-grade">оцена ${grade}</span>` : ''}
+      </div>
       <div class="btn-undo" onclick="undoPass('${id}')">↩ поништи положено</div>
     `;
     return;
@@ -828,13 +1295,14 @@ function buildActions(actionsDiv) {
 
   let html = '';
 
-  // ВАЖНО: checkbox "остварен услов" мора бити видљив и доступан ОДМАХ,
+  // ВАЖНО: тогл "остварен услов" мора бити видљив и доступан ОДМАХ,
   // независно од тога да ли је предмет уписан или не.
   html += `
-    <div class="check-row">
+    <label class="toggle-chip" for="uslov-${id}">
       <input type="checkbox" id="uslov-${id}" ${s.uslov ? 'checked' : ''} onchange="toggleUslov('${id}', this.checked)">
-      <label for="uslov-${id}">остварен услов</label>
-    </div>
+      <span class="toggle-chip-mark"></span>
+      <span class="toggle-chip-text">остварен услов</span>
+    </label>
   `;
 
   if (!s.enrolled) {
@@ -850,7 +1318,7 @@ function buildActions(actionsDiv) {
         </div>
       `;
     } else {
-      html += `<button class="btn-enroll" onclick="enrollSubject('${id}')">Упиши</button>`;
+      html += `<button class="btn-primary-pill" onclick="enrollSubject('${id}')">Упиши</button>`;
     }
   } else {
     html += `
@@ -866,10 +1334,10 @@ function buildActions(actionsDiv) {
         <option value="">— академска година (обавезно) —</option>
         ${ACADEMIC_YEARS.map(y => `<option value="${y}">${y}</option>`).join('')}
       </select>
-      <div class="check-row">
+      <label class="btn-confirm-pass" for="chk-${id}">
         <input type="checkbox" id="chk-${id}" onchange="togglePassed('${id}', this.checked)">
-        <label for="chk-${id}">положила</label>
-      </div>
+        <span class="btn-confirm-pass-inner">Означи као положено</span>
+      </label>
       <div class="btn-unenroll" onclick="unenrollSubject('${id}')">↩ уклони упис</div>
     `;
   }
@@ -878,6 +1346,7 @@ function buildActions(actionsDiv) {
 }
 
 async function toggleUslov(id, checked) {
+  if (VIEW_ONLY) return;
   const s = ensureState(id);
   s.uslov = checked;
   await saveState();
@@ -973,7 +1442,19 @@ function showToast(subject, grade) {
   }, 3000);
 }
 
+function spawnStarPop(row) {
+  if (!row) return;
+  const cell = row.querySelector('td:nth-child(6) .badge');
+  if (!cell) return;
+  const star = document.createElement('span');
+  star.className = 'star-pop';
+  star.textContent = '✦';
+  cell.appendChild(star);
+  setTimeout(() => star.remove(), 900);
+}
+
 async function togglePassed(id, checked) {
+  if (VIEW_ONLY) return;
   const row = document.querySelector(`tr[data-id="${id}"]`);
   const s = ensureState(id);
 
@@ -1016,6 +1497,7 @@ async function togglePassed(id, checked) {
     await saveState();
     recalc();
     updateRowVisual(id);
+    spawnStarPop(row);
     showToast(subjectName, grade);
     buildActions(document.querySelector(`.actions[data-id="${id}"]`));
   } else {
@@ -1028,6 +1510,7 @@ async function togglePassed(id, checked) {
 }
 
 async function undoPass(id) {
+  if (VIEW_ONLY) return;
   const s = ensureState(id);
   s.passed = false;
   s.rok = null;
@@ -1041,6 +1524,7 @@ async function undoPass(id) {
 }
 
 async function enrollSubject(id) {
+  if (VIEW_ONLY) return;
   const s = ensureState(id);
   s.enrolled = true;
   await saveState();
@@ -1050,6 +1534,7 @@ async function enrollSubject(id) {
 }
 
 async function unenrollSubject(id) {
+  if (VIEW_ONLY) return;
   const s = ensureState(id);
   s.enrolled = false;
   s.rok = null;
@@ -1069,6 +1554,7 @@ async function unenrollSubject(id) {
 }
 
 async function confirmElective(id) {
+  if (VIEW_ONLY) return;
   const sel = document.getElementById('esel-' + id);
   if (!sel || !sel.value) return;
   const chosen = sel.value;
@@ -1133,7 +1619,319 @@ function initActions() {
   });
 }
 
+/* ══════════════════════════════════════════════════════════════
+   BACKUP (export/import) + SHARE (read-only snapshot link)
+   Ova tri sistema su namerno odvojena:
+   1) window.storage  — glavni editable tracker (automatsko čuvanje)
+   2) export/import .json — bezbednosna kopija tog istog state-a
+   3) share link (#share=...) — READ-ONLY snapshot za drugu osobu,
+      nikad se ne piše u window.storage
+   ══════════════════════════════════════════════════════════════ */
+
+// UTF-8 bezbedan base64 (da Ćirilica u nazivima izbornih predmeta ne puca kodiranje)
+function utf8ToB64(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (_, p1) {
+    return String.fromCharCode('0x' + p1);
+  }));
+}
+function b64ToUtf8(b64) {
+  return decodeURIComponent(atob(b64).split('').map(function (c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+}
+
+// Kompaktan oblik state-a za share link (kraći URL) — koristi samo popunjena polja
+function compactStateForShare(st) {
+  const out = {};
+  Object.keys(st).forEach(id => {
+    const s = getRowStateFrom(st, id);
+    const c = {};
+    if (s.enrolled) c.e = 1;
+    if (s.uslov) c.u = 1;
+    if (s.passed) c.p = 1;
+    if (s.rok) c.r = s.rok;
+    if (s.grade) c.g = s.grade;
+    if (s.academicYear) c.y = s.academicYear;
+    if (s.chosenName) c.c = s.chosenName;
+    if (Object.keys(c).length) out[id] = c;
+  });
+  return out;
+}
+function getRowStateFrom(st, id) {
+  const s = st[id];
+  return {
+    enrolled: s ? !!s.enrolled : false,
+    uslov: s ? !!s.uslov : false,
+    passed: s ? !!s.passed : false,
+    rok: s ? (s.rok || null) : null,
+    grade: s ? (s.grade || null) : null,
+    academicYear: s ? (s.academicYear || null) : null,
+    chosenName: s ? s.chosenName : undefined
+  };
+}
+function expandShareState(compact) {
+  const out = {};
+  Object.keys(compact).forEach(id => {
+    const c = compact[id] || {};
+    out[id] = {
+      enrolled: !!c.e,
+      uslov: !!c.u,
+      passed: !!c.p,
+      rok: c.r || null,
+      grade: c.g || null,
+      academicYear: c.y || null,
+      chosenName: c.c || undefined
+    };
+  });
+  return out;
+}
+
+// ── EXPORT BACKUP ──
+function exportBackup() {
+  const payload = {
+    app: 'politikologija-tracker',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    state: state
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `politikologija-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ── IMPORT BACKUP (bezbedno — validacija pre bilo kakve izmene) ──
+function extractStateFromBackup(parsed) {
+  if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) &&
+      parsed.state && typeof parsed.state === 'object' && !Array.isArray(parsed.state)) {
+    return parsed.state;
+  }
+  return parsed;
+}
+function isValidBackupShape(obj) {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+  for (const id of Object.keys(obj)) {
+    const v = obj[id];
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return false;
+    if ('enrolled' in v && typeof v.enrolled !== 'boolean') return false;
+    if ('uslov' in v && typeof v.uslov !== 'boolean') return false;
+    if ('passed' in v && typeof v.passed !== 'boolean') return false;
+  }
+  return true;
+}
+
+async function handleImportFile(file) {
+  let text;
+  try {
+    text = await file.text();
+  } catch (e) {
+    alert('Фајл није могуће прочитати. Import није извршен, твоји подаци нису промењени.');
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (e) {
+    alert('Фајл није валидан JSON. Import није извршен, твоји подаци нису промењени.');
+    return;
+  }
+
+  const candidateState = extractStateFromBackup(parsed);
+  if (!isValidBackupShape(candidateState)) {
+    alert('Овај фајл не одговара структури података ове апликације. Import није извршен, твоји подаци нису промењени.');
+    return;
+  }
+
+  const confirmed = confirm('Import ће заменити тренутно сачувано стање. Наставити?');
+  if (!confirmed) return;
+
+  state = candidateState;
+  const saved = await saveState();
+  fullRerenderFromState();
+  closeBackupMenu();
+  alert('Подаци су успешно увезени.');
+}
+
+// Ponovo iscrtava kompletan UI na osnovu trenutnog `state` (koristi se posle importa)
+function fullRerenderFromState() {
+  // resetuj imena izbornih predmeta na originale pre ponovnog primenjivanja chosenName
+  document.querySelectorAll('[id$="-name"]').forEach(nameEl => {
+    if (nameEl.dataset.original) nameEl.textContent = nameEl.dataset.original;
+  });
+  applyStoredState();
+  document.querySelectorAll('tr[data-id]').forEach(row => updateRowVisual(row.dataset.id));
+  initActions();
+  recalc();
+}
+
+// ── SHARE LINK (read-only snapshot, ne dira window.storage) ──
+function buildShareLink() {
+  const compact = compactStateForShare(state);
+  const encoded = utf8ToB64(JSON.stringify(compact));
+  const url = new URL(window.location.href);
+  url.hash = '';
+  url.search = '';
+  return `${url.origin}${url.pathname}#share=${encoded}`;
+}
+
+function tryParseShareHash() {
+  try {
+    const hash = window.location.hash || '';
+    const m = hash.match(/share=([^&]+)/);
+    if (!m) return null;
+    const json = b64ToUtf8(decodeURIComponent(m[1]));
+    const compact = JSON.parse(json);
+    if (!compact || typeof compact !== 'object' || Array.isArray(compact)) return null;
+    return expandShareState(compact);
+  } catch (e) {
+    console.error('Неисправан share линк:', e);
+    return null;
+  }
+}
+
+function showShareLink() {
+  const link = buildShareLink();
+  const box = document.getElementById('share-link-box');
+  const input = document.getElementById('share-link-input');
+  if (!box || !input) return;
+  input.value = link;
+  box.hidden = false;
+  input.focus();
+  input.select();
+}
+
+function hideShareLink() {
+  const box = document.getElementById('share-link-box');
+  if (box) box.hidden = true;
+}
+
+function toggleShareLink() {
+  const box = document.getElementById('share-link-box');
+  if (!box) return;
+  if (box.hidden) {
+    showShareLink();
+  } else {
+    hideShareLink();
+  }
+}
+
+function copyShareLink() {
+  const input = document.getElementById('share-link-input');
+  if (!input) return;
+  input.select();
+  input.setSelectionRange(0, 99999);
+  const btn = document.getElementById('btn-copy-link');
+  const original = btn ? btn.textContent : '';
+  const done = () => {
+    if (btn) {
+      btn.textContent = 'Копирано ✓';
+      setTimeout(() => { btn.textContent = original; }, 1600);
+    }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(input.value).then(done).catch(() => {
+      try { document.execCommand('copy'); done(); } catch (e) {}
+    });
+  } else {
+    try { document.execCommand('copy'); done(); } catch (e) {}
+  }
+}
+
+// ── VIEW-ONLY rendering (koristi se kad je otvoren share link) ──
+function renderReadOnlyActions(actionsDiv, id, s) {
+  if (s.passed) {
+    const rok = s.rok || '—';
+    const grade = s.grade || null;
+    const academicYear = s.academicYear || '—';
+    actionsDiv.innerHTML = `
+      <div class="passed-summary">
+        <span class="passed-summary-item">${rok} · ${academicYear}</span>
+        ${grade ? `<span class="passed-summary-grade">оцена ${grade}</span>` : ''}
+      </div>
+    `;
+    return;
+  }
+  if (s.enrolled) {
+    actionsDiv.innerHTML = `<span class="view-only-note">${s.uslov ? 'остварен услов' : 'без услова'}</span>`;
+    return;
+  }
+  actionsDiv.innerHTML = `<span class="view-only-note">—</span>`;
+}
+
+// ── Meni: export / import / share (⋯) ──
+function toggleBackupMenu(e) {
+  if (e) e.stopPropagation();
+  const panel = document.getElementById('backup-menu-panel');
+  const btn = document.getElementById('backup-menu-btn');
+  if (!panel || !btn) return;
+  const opening = panel.hidden;
+  panel.hidden = !opening;
+  btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+}
+function closeBackupMenu() {
+  const panel = document.getElementById('backup-menu-panel');
+  const btn = document.getElementById('backup-menu-btn');
+  if (panel) panel.hidden = true;
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+function wireBackupMenu() {
+  const menuBtn = document.getElementById('backup-menu-btn');
+  const exportBtn = document.getElementById('btn-export');
+  const importBtn = document.getElementById('btn-import');
+  const importInput = document.getElementById('import-file-input');
+  const shareBtn = document.getElementById('btn-share');
+  const copyBtn = document.getElementById('btn-copy-link');
+  const closeShareBtn = document.getElementById('btn-close-share');
+
+  if (menuBtn) menuBtn.addEventListener('click', toggleBackupMenu);
+  if (exportBtn) exportBtn.addEventListener('click', () => { exportBackup(); closeBackupMenu(); });
+  if (importBtn) importBtn.addEventListener('click', () => importInput && importInput.click());
+  if (importInput) importInput.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) handleImportFile(file);
+    e.target.value = '';
+  });
+  if (shareBtn) shareBtn.addEventListener('click', toggleShareLink);
+  if (copyBtn) copyBtn.addEventListener('click', copyShareLink);
+  if (closeShareBtn) closeShareBtn.addEventListener('click', hideShareLink);
+
+  document.addEventListener('click', (e) => {
+    const wrap = document.getElementById('backup-menu-wrap');
+    if (wrap && !wrap.contains(e.target)) closeBackupMenu();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeBackupMenu();
+  });
+}
+
 async function init() {
+  wireBackupMenu();
+
+  const shared = tryParseShareHash();
+  if (shared) {
+    // READ-ONLY snapshot rezim — nikad se ne pise u window.storage,
+    // ne poziva se loadState()/saveState() nad ovim podacima.
+    VIEW_ONLY = true;
+    state = shared;
+    applyStoredState();
+    document.querySelectorAll('tr[data-id]').forEach(row => updateRowVisual(row.dataset.id));
+    initActions();
+    recalc();
+    const banner = document.getElementById('view-only-banner');
+    if (banner) banner.hidden = false;
+    const menuWrap = document.getElementById('backup-menu-wrap');
+    if (menuWrap) menuWrap.style.display = 'none';
+    return;
+  }
+
   await loadState();
   applyStoredState();
   initActions();
